@@ -1,6 +1,6 @@
 # telegram_go_bot
 
-[![Coverage Status](https://coveralls.io/repos/github/azerg/telegram_go_bot/badge.svg?branch=master)](https://coveralls.io/github/azerg/telegram_go_bot?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/telegram-go-bot/go_bot/badge.svg?branch=master)](https://coveralls.io/github/telegram-go-bot/go_bot?branch=master)
 
 [![Build Status](https://travis-ci.com/azerg/telegram_go_bot.svg?branch=master)](https://travis-ci.com/azerg/telegram_go_bot)
 
