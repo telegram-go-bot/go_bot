@@ -2,7 +2,7 @@
 
 [![Coverage Status](https://coveralls.io/repos/github/telegram-go-bot/go_bot/badge.svg?branch=master)](https://coveralls.io/github/telegram-go-bot/go_bot?branch=master)
 
-[![Build Status](https://travis-ci.com/azerg/telegram_go_bot.svg?branch=master)](https://travis-ci.com/azerg/telegram_go_bot)
+[![Build Status](https://travis-ci.com/telegram-go-bot/go_bot.svg?branch=master)](https://travis-ci.com/telegram-go-bot/go_bot)
 
 funny telegram bot in go.
 
