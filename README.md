@@ -1,8 +1,6 @@
 # telegram_go_bot
 
-[![Coverage Status](https://coveralls.io/repos/github/telegram-go-bot/go_bot/badge.svg?branch=master)](https://coveralls.io/github/telegram-go-bot/go_bot?branch=master)
-
-[![Build Status](https://travis-ci.com/telegram-go-bot/go_bot.svg?branch=master)](https://travis-ci.com/telegram-go-bot/go_bot)
+[![Coverage Status](https://coveralls.io/repos/github/telegram-go-bot/go_bot/badge.svg?branch=master)](https://coveralls.io/github/telegram-go-bot/go_bot?branch=master) [![Build Status](https://travis-ci.com/telegram-go-bot/go_bot.svg?branch=master)](https://travis-ci.com/telegram-go-bot/go_bot) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![Go Report Card](https://goreportcard.com/badge/github.com/telegram-go-bot/go_bot)](https://goreportcard.com/report/github.com/telegram-go-bot/go_bot)
 
 funny telegram bot in go.
 
@@ -23,3 +21,6 @@ funny telegram bot in go.
 |OWNER_ID|Telegram username. is  used to give unique replies for example for debugging|
 |PORT|~|
 
+### Todo:
+ - [ ] Add UML diagram
+ - [ ] enable coverity :sob:
