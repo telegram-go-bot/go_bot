@@ -17,15 +17,16 @@ func NewActivityPresenter(outputView output.IView) *ActivityPresenter {
 }
 
 // ShowMessage - display dummy message
-func (s ActivityPresenter) ShowMessage(data output.ShowMessageData) error {
+func (s ActivityPresenter) ShowMessage(data output.ShowMessageData) (int, error) {
 	var msgData output.ViewMessageData
 	msgData.Text = data.Text
 	msgData.ChatID = data.ChatID
+	msgData.ReplyToMsgID = data.ReplyToMsgID
 
-	err := s.view.ShowMessage(msgData)
+	msgID, err := s.view.ShowMessage(msgData)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	return nil
+	return msgID, nil
 }

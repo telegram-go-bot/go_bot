@@ -1,6 +1,7 @@
 package output
 
-// IView -
+// IView - display smth
+// return: @sent_message_id, error
 type IView interface {
-	ShowMessage(msg ViewMessageData) error
+	ShowMessage(msg ViewMessageData) (int, error)
 }

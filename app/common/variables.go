@@ -1,4 +1,4 @@
-package global
+package cmn
 
 import (
 	"math/rand"

@@ -36,10 +36,16 @@ func NewTelegramAPIView(botToken string) *APIView {
 }
 
 // ShowMessage - display msg using telegram bot api
-func (t *APIView) ShowMessage(msg output.ViewMessageData) error {
+func (t *APIView) ShowMessage(msg output.ViewMessageData) (int, error) {
 
 	msgOut := tgbotapi.NewMessage(msg.ChatID, msg.Text)
-	bot.Send(msgOut)
+	if msg.ReplyToMsgID != 0 {
+		msgOut.ReplyToMessageID = msg.ReplyToMsgID
+	}
+	sent, err := bot.Send(msgOut)
+	if err != nil {
+		return 0, err
+	}
 
-	return nil
+	return sent.MessageID, nil
 }

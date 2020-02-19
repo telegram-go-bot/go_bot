@@ -4,9 +4,8 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/telegram-go-bot/go_bot/app/global"
-
 	activityhandlers "github.com/telegram-go-bot/go_bot/app/activity_handlers"
+	cmn "github.com/telegram-go-bot/go_bot/app/common"
 	output "github.com/telegram-go-bot/go_bot/app/output"
 )
 
@@ -15,8 +14,8 @@ type PickFirstOrSecond struct {
 	presenter output.IPresenter
 }
 
-// NewPickFirstOrSecond - constructor
-func NewPickFirstOrSecond(presenter output.IPresenter) PickFirstOrSecond {
+// New - constructor
+func New(presenter output.IPresenter) PickFirstOrSecond {
 	return PickFirstOrSecond{presenter: presenter}
 }
 
@@ -38,7 +37,7 @@ func getYesNoCantPeekMsg() string {
 		"ты билли",
 		"нет"}
 
-	itemNo := global.Rnd.Intn(len(items))
+	itemNo := cmn.Rnd.Intn(len(items))
 	return items[itemNo]
 }
 
@@ -63,13 +62,13 @@ func (p PickFirstOrSecond) OnCommand(item activityhandlers.ActivityItem) (bool, 
 
 	res = append(res[:0], res[2:]...)
 
-	if global.Rnd.Intn(14) == 1 {
+	if cmn.Rnd.Intn(14) == 1 {
 		// 1 times from 15 do not pick anything
 		SendMsg(getYesNoCantPeekMsg())
 		return true, nil
 	}
 
-	if global.Rnd.Intn(2) == 1 {
+	if cmn.Rnd.Intn(2) == 1 {
 		SendMsg(res[0])
 	} else {
 		SendMsg(res[1])
