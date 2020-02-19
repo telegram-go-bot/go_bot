@@ -1,6 +1,6 @@
 # telegram_go_bot
 
-[![Coverage Status](https://coveralls.io/repos/github/telegram-go-bot/go_bot/badge.svg?branch=master)](https://coveralls.io/github/telegram-go-bot/go_bot?branch=master) [![Build Status](https://travis-ci.com/telegram-go-bot/go_bot.svg?branch=master)](https://travis-ci.com/telegram-go-bot/go_bot) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![Go Report Card](https://goreportcard.com/badge/github.com/telegram-go-bot/go_bot)](https://goreportcard.com/report/github.com/telegram-go-bot/go_bot)
+[![Coverage Status](https://coveralls.io/repos/github/telegram-go-bot/go_bot/badge.svg?branch=master)](https://coveralls.io/github/telegram-go-bot/go_bot?branch=master) [![Build Status](https://travis-ci.com/telegram-go-bot/go_bot.svg?branch=master)](https://travis-ci.com/telegram-go-bot/go_bot) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![Go Report Card](https://goreportcard.com/badge/github.com/telegram-go-bot/go_bot)](https://goreportcard.com/report/github.com/telegram-go-bot/go_bot) [![HitCount](http://hits.dwyl.com/azerg/githubcom/telegram-go-bot/go_bot.svg)](http://hits.dwyl.com/azerg/githubcom/telegram-go-bot/go_bot) [![Coverage Status](https://coveralls.io/repos/github/telegram-go-bot/go_bot/badge.svg?branch=master)](https://coveralls.io/github/telegram-go-bot/go_bot?branch=master) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/f7237471effa4ee5a07cd85447eaa2e6)](https://www.codacy.com/gh/telegram-go-bot/go_bot?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=telegram-go-bot/go_bot&amp;utm_campaign=Badge_Grade)
 
 funny telegram bot in go.
 
@@ -23,4 +23,4 @@ funny telegram bot in go.
 
 ### Todo:
  - [ ] Add UML diagram
- - [ ] enable coverity :sob:
+ - [x] enable coverity
