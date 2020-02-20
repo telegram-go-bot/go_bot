@@ -7,8 +7,9 @@ import (
 	"strings"
 
 	activityhandlers "github.com/telegram-go-bot/go_bot/app/activity_handlers"
-	onpickfirstorsecond "github.com/telegram-go-bot/go_bot/app/activity_handlers/on_pick_first_or_second"
-	onzagadka "github.com/telegram-go-bot/go_bot/app/activity_handlers/on_zagadka"
+	"github.com/telegram-go-bot/go_bot/app/activity_handlers/goroskop"
+	pickfirstorsecond "github.com/telegram-go-bot/go_bot/app/activity_handlers/pick_first_or_second"
+	"github.com/telegram-go-bot/go_bot/app/activity_handlers/zagadka"
 	collywrapper "github.com/telegram-go-bot/go_bot/app/common/web_scrapper/colly_wrapper"
 	"github.com/telegram-go-bot/go_bot/app/domain"
 	in "github.com/telegram-go-bot/go_bot/app/input/activities/telegram"
@@ -33,8 +34,9 @@ var (
 	scrapper    = collywrapper.Scrapper{}
 
 	commandHandlers = []activityhandlers.ICommandHandler{
-		onpickfirstorsecond.New(tgPresenter),
-		onzagadka.New(tgPresenter, scrapper)}
+		pickfirstorsecond.New(tgPresenter),
+		zagadka.New(tgPresenter, scrapper),
+		goroskop.New(tgPresenter, scrapper)}
 )
 
 func main() {

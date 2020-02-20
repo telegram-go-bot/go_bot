@@ -1,4 +1,4 @@
-package onzagadka
+package zagadka
 
 import (
 	"regexp"
@@ -12,24 +12,23 @@ import (
 	output "github.com/telegram-go-bot/go_bot/app/output"
 )
 
-// OnZagadka -
-type OnZagadka struct {
+type zagadka struct {
 	presenter output.IPresenter
 	scrapper  webscrapper.Interface
 }
 
 // New - constructor
-func New(presenter output.IPresenter, scrapper webscrapper.Interface) OnZagadka {
-	return OnZagadka{presenter: presenter, scrapper: scrapper}
+func New(presenter output.IPresenter, scrapper webscrapper.Interface) zagadka {
+	return zagadka{presenter: presenter, scrapper: scrapper}
 }
 
 // OnHelp - display help
-func (p OnZagadka) OnHelp() string {
+func (p zagadka) OnHelp() string {
 	return "<b>!загадка</b> затем <b>!отгадка|ответ|разгадка</b> - загадки для выпускников Гарварда"
 }
 
 // OnCommand -
-func (p OnZagadka) OnCommand(item activityhandlers.ActivityItem) (bool, error) {
+func (p zagadka) OnCommand(item activityhandlers.ActivityItem) (bool, error) {
 	var isZagadka, isRazgadka bool
 
 	_, isZagadka = helpers.IsOnCommand(item.Text, []string{"загадка"})
@@ -49,7 +48,7 @@ func (p OnZagadka) OnCommand(item activityhandlers.ActivityItem) (bool, error) {
 	return true, nil
 }
 
-func (p OnZagadka) onZagadka(item activityhandlers.ActivityItem) {
+func (p zagadka) onZagadka(item activityhandlers.ActivityItem) {
 
 	SendMsg := func(message string) (int, error) {
 		return p.presenter.ShowMessage(output.ShowMessageData{ChatID: item.ChatID, Text: message})
@@ -83,7 +82,7 @@ func (p OnZagadka) onZagadka(item activityhandlers.ActivityItem) {
 	activeItems[item.ChatID] = quest
 }
 
-func (p OnZagadka) onOtgadka(item activityhandlers.ActivityItem) {
+func (p zagadka) onOtgadka(item activityhandlers.ActivityItem) {
 
 	SendMsgTo := func(message string, replyTo int) (int, error) {
 		return p.presenter.ShowMessage(output.ShowMessageData{ChatID: item.ChatID, Text: message, ReplyToMsgID: replyTo})
