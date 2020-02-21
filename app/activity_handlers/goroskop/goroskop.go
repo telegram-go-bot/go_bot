@@ -3,10 +3,10 @@ package goroskop
 import (
 	"strconv"
 
-	activityhandlers "github.com/telegram-go-bot/go_bot/app/activity_handlers"
 	helpers "github.com/telegram-go-bot/go_bot/app/activity_handlers/activity_helpers"
 	cmn "github.com/telegram-go-bot/go_bot/app/common"
 	webscrapper "github.com/telegram-go-bot/go_bot/app/common/web_scrapper"
+	raw "github.com/telegram-go-bot/go_bot/app/domain"
 	"github.com/telegram-go-bot/go_bot/app/output"
 )
 
@@ -26,7 +26,7 @@ func (p impl) OnHelp() string {
 }
 
 // OnCommand -
-func (p impl) OnCommand(item activityhandlers.ActivityItem) (bool, error) {
+func (p impl) OnCommand(item raw.Activity) (bool, error) {
 
 	_, isThisCommand := helpers.IsOnCommand(item.Text, []string{"чобудет", "шобудет"})
 	if !isThisCommand {

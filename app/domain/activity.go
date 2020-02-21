@@ -1,4 +1,4 @@
-package rawstructures
+package domain
 
 // Activity - received notification
 // Telegram receives message and this one describes it

@@ -1,7 +1,7 @@
 package activities
 
 import (
-	raw "github.com/telegram-go-bot/go_bot/app/domain/raw_structures"
+	raw "github.com/telegram-go-bot/go_bot/app/domain"
 )
 
 // IActivityReader -

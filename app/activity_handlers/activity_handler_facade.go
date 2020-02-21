@@ -1,18 +1,17 @@
-package domain
+package activityhandlers
 
 import (
-	activityhandlers "github.com/telegram-go-bot/go_bot/app/activity_handlers"
-	raw "github.com/telegram-go-bot/go_bot/app/domain/raw_structures"
+	raw "github.com/telegram-go-bot/go_bot/app/domain"
 	"github.com/telegram-go-bot/go_bot/app/input/activities"
 )
 
 // ActivityHandlerFacade - processing activities
 type ActivityHandlerFacade struct {
-	handlers []activityhandlers.ICommandHandler
+	handlers []ICommandHandler
 }
 
 // NewActivityHandlerFacade - constructor
-func NewActivityHandlerFacade(commandHandlers []activityhandlers.ICommandHandler) *ActivityHandlerFacade {
+func NewActivityHandlerFacade(commandHandlers []ICommandHandler) *ActivityHandlerFacade {
 
 	res := new(ActivityHandlerFacade)
 	res.handlers = commandHandlers
@@ -27,14 +26,14 @@ func (h *ActivityHandlerFacade) ProcessActivities(reader activities.IActivityRea
 		if err != nil {
 			return err
 		}
-		err = h.onActivity(activityToActivityItem(activity))
+		err = h.onActivity(activity)
 		if err != nil {
 			return err
 		}
 	}
 }
 
-func (h *ActivityHandlerFacade) onActivity(activity activityhandlers.ActivityItem) error {
+func (h *ActivityHandlerFacade) onActivity(activity raw.Activity) error {
 
 	for _, handler := range h.handlers {
 		done, err := handler.OnCommand(activity)
@@ -48,12 +47,4 @@ func (h *ActivityHandlerFacade) onActivity(activity activityhandlers.ActivityIte
 	}
 
 	return nil
-}
-
-// mapping
-func activityToActivityItem(activity raw.Activity) activityhandlers.ActivityItem {
-	var res activityhandlers.ActivityItem
-	res.Text = activity.Text
-	res.ChatID = activity.ChatID
-	return res
 }

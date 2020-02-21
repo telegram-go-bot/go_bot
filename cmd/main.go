@@ -40,7 +40,11 @@ var (
 )
 
 func main() {
-	tgBot := domain.NewActivityHandlerFacade(commandHandlers)
+	err := domain.InitVKApi(vkLogin, vkPwd)
+	if err != nil {
+		panic(err)
+	}
+	tgBot := activityhandlers.NewActivityHandlerFacade(commandHandlers)
 	tgBot.ProcessActivities(tgReader)
 }
 

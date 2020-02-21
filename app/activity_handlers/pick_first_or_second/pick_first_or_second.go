@@ -4,23 +4,22 @@ import (
 	"fmt"
 	"regexp"
 
-	activityhandlers "github.com/telegram-go-bot/go_bot/app/activity_handlers"
 	cmn "github.com/telegram-go-bot/go_bot/app/common"
+	raw "github.com/telegram-go-bot/go_bot/app/domain"
 	output "github.com/telegram-go-bot/go_bot/app/output"
 )
 
-// PickFirstOrSecond -
-type pickFirstOrSecond struct {
+type impl struct {
 	presenter output.IPresenter
 }
 
 // New - constructor
-func New(presenter output.IPresenter) pickFirstOrSecond {
-	return pickFirstOrSecond{presenter: presenter}
+func New(presenter output.IPresenter) impl {
+	return impl{presenter: presenter}
 }
 
 // OnHelp - display help
-func (p pickFirstOrSecond) OnHelp() string {
+func (p impl) OnHelp() string {
 	// todo: use BOT_UIDS instead
 	return "<b>!билли|billy</b> <i>smth</i> <b>или</b> <i>smth else</i> - выбираю лучший из вариантов"
 }
@@ -42,7 +41,7 @@ func getYesNoCantPeekMsg() string {
 }
 
 // OnCommand -
-func (p pickFirstOrSecond) OnCommand(item activityhandlers.ActivityItem) (bool, error) {
+func (p impl) OnCommand(item raw.Activity) (bool, error) {
 
 	SendMsg := func(message string) {
 		p.presenter.ShowMessage(output.ShowMessageData{ChatID: item.ChatID, Text: message})

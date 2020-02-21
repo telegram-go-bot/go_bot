@@ -1,13 +1,9 @@
 package activityhandlers
 
-// ActivityItem - representation of activity, but in terms of commandhandler
-type ActivityItem struct {
-	Text   string
-	ChatID int64
-}
+import raw "github.com/telegram-go-bot/go_bot/app/domain"
 
 // ICommandHandler - common interface for all handlers
 type ICommandHandler interface {
 	OnHelp() string
-	OnCommand(ActivityItem) (bool, error)
+	OnCommand(raw.Activity) (bool, error)
 }

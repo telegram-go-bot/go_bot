@@ -5,10 +5,10 @@ import (
 	"strconv"
 	"strings"
 
-	activityhandlers "github.com/telegram-go-bot/go_bot/app/activity_handlers"
 	helpers "github.com/telegram-go-bot/go_bot/app/activity_handlers/activity_helpers"
 	cmn "github.com/telegram-go-bot/go_bot/app/common"
 	webscrapper "github.com/telegram-go-bot/go_bot/app/common/web_scrapper"
+	raw "github.com/telegram-go-bot/go_bot/app/domain"
 	output "github.com/telegram-go-bot/go_bot/app/output"
 )
 
@@ -28,7 +28,7 @@ func (p zagadka) OnHelp() string {
 }
 
 // OnCommand -
-func (p zagadka) OnCommand(item activityhandlers.ActivityItem) (bool, error) {
+func (p zagadka) OnCommand(item raw.Activity) (bool, error) {
 	var isZagadka, isRazgadka bool
 
 	_, isZagadka = helpers.IsOnCommand(item.Text, []string{"загадка"})
@@ -48,7 +48,7 @@ func (p zagadka) OnCommand(item activityhandlers.ActivityItem) (bool, error) {
 	return true, nil
 }
 
-func (p zagadka) onZagadka(item activityhandlers.ActivityItem) {
+func (p zagadka) onZagadka(item raw.Activity) {
 
 	SendMsg := func(message string) (int, error) {
 		return p.presenter.ShowMessage(output.ShowMessageData{ChatID: item.ChatID, Text: message})
@@ -82,7 +82,7 @@ func (p zagadka) onZagadka(item activityhandlers.ActivityItem) {
 	activeItems[item.ChatID] = quest
 }
 
-func (p zagadka) onOtgadka(item activityhandlers.ActivityItem) {
+func (p zagadka) onOtgadka(item raw.Activity) {
 
 	SendMsgTo := func(message string, replyTo int) (int, error) {
 		return p.presenter.ShowMessage(output.ShowMessageData{ChatID: item.ChatID, Text: message, ReplyToMsgID: replyTo})

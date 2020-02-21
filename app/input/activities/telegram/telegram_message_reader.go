@@ -2,7 +2,7 @@ package telegram
 
 import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
-	raw "github.com/telegram-go-bot/go_bot/app/domain/raw_structures"
+	raw "github.com/telegram-go-bot/go_bot/app/domain"
 	"github.com/telegram-go-bot/go_bot/app/output/views/telegram"
 )
 
