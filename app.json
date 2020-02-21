@@ -1,0 +1,8 @@
+{
+  "description": "TelegramBot with as much funny commands as possible",
+  "buildpacks": [
+    {
+      "url": "heroku/go"
+    }
+  ]
+}
