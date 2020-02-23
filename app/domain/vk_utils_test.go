@@ -4,7 +4,7 @@ import "testing"
 
 func TestInitArrayOfIndexes(t *testing.T) {
 	const size = 5
-	arr := initArrayOfIndexes(size)
+	arr := InitArrayOfIndexes(size)
 	if len(arr) != size {
 		t.Errorf("size of Array failed. Expected: %d, Actual: %d", size, len(arr))
 	}
@@ -12,7 +12,7 @@ func TestInitArrayOfIndexes(t *testing.T) {
 
 func TestInitArrayOfIndexesIsRandomShuffled(t *testing.T) {
 	const size = 10
-	arr := initArrayOfIndexes(size)
+	arr := InitArrayOfIndexes(size)
 	// if array is sorted, or filled with similar vals - fail
 	sortedAsc := true
 	sortedDesc := true
