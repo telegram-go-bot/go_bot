@@ -157,7 +157,7 @@ func VkAuth(login string, password string) (*AuthResponse, error) {
 }
 
 // VkRequest function makes api method request and returns []byte JSON response
-func VkRequest(methodName string, parameters map[string]string, user *AuthResponse) ([]byte, error) {
+func VkRequest(methodName string, parameters map[string]string) ([]byte, error) {
 	requestURL, err := url.Parse(apiMethodURL + methodName)
 	if err != nil {
 		return nil, err
@@ -166,8 +166,8 @@ func VkRequest(methodName string, parameters map[string]string, user *AuthRespon
 	for key, value := range parameters {
 		requestQuery.Set(key, value)
 	}
-	if user != nil {
-		requestQuery.Set("access_token", user.AccessToken)
+	if authResponse != nil {
+		requestQuery.Set("access_token", authResponse.AccessToken)
 	}
 	requestQuery.Set("v", "5.101")
 	requestURL.RawQuery = requestQuery.Encode()
@@ -195,7 +195,8 @@ func RandomShuffle(vals []int) []int {
 	return ret
 }
 
-func initArrayOfIndexes(size int) []int {
+// InitArrayOfIndexes - generate sequence
+func InitArrayOfIndexes(size int) []int {
 	var res []int
 	for i := 0; i < size; i++ {
 		res = append(res, i)

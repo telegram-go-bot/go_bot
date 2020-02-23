@@ -27,7 +27,7 @@ func GetComments(messageID int, ownerID int, count int, offset int, minLikes int
 	parameters["owner_id"] = strconv.Itoa(ownerID)
 	parameters["need_likes"] = "1"
 
-	resp, err := VkRequest("wall.getComments", parameters, authResponse)
+	resp, err := VkRequest("wall.getComments", parameters)
 	if err != nil {
 		log.Printf("wall.get request failed: %s\n", err)
 		return false, nil
