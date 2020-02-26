@@ -64,13 +64,13 @@ func getLoopaAndPoopaNews(depth string) string {
 	parameters["count"] = depth // message
 	parameters["domain"] = "pupa_and_lupa"
 
-	resp, err := domain.VkRequest("wall.get", parameters)
+	resp, err := cmn.VkRequest("wall.get", parameters)
 	if err != nil {
 		log.Printf("wall.get request failed: %s\n", err)
 		return ""
 	}
 
-	var vkWallResponse domain.VkWallGetResponse
+	var vkWallResponse cmn.VkWallGetResponse
 
 	err = json.Unmarshal(resp, &vkWallResponse)
 	if err != nil {
@@ -78,7 +78,7 @@ func getLoopaAndPoopaNews(depth string) string {
 		return ""
 	}
 
-	indexes := domain.InitArrayOfIndexes(len(vkWallResponse.Response.Items))
+	indexes := cmn.InitArrayOfIndexes(len(vkWallResponse.Response.Items))
 	if len(indexes) <= 0 {
 		log.Println("Error init array of indexes...")
 		return ""
