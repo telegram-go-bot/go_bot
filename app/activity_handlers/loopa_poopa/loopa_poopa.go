@@ -8,6 +8,7 @@ import (
 
 	helpers "github.com/telegram-go-bot/go_bot/app/activity_handlers/activity_helpers"
 	cmn "github.com/telegram-go-bot/go_bot/app/common"
+	"github.com/telegram-go-bot/go_bot/app/common/vk"
 	"github.com/telegram-go-bot/go_bot/app/domain"
 	"github.com/telegram-go-bot/go_bot/app/output"
 )
@@ -64,13 +65,13 @@ func getLoopaAndPoopaNews(depth string) string {
 	parameters["count"] = depth // message
 	parameters["domain"] = "pupa_and_lupa"
 
-	resp, err := cmn.VkRequest("wall.get", parameters)
+	resp, err := vk.Request("wall.get", parameters)
 	if err != nil {
 		log.Printf("wall.get request failed: %s\n", err)
 		return ""
 	}
 
-	var vkWallResponse cmn.VkWallGetResponse
+	var vkWallResponse vk.WallGetResponse
 
 	err = json.Unmarshal(resp, &vkWallResponse)
 	if err != nil {
@@ -78,7 +79,7 @@ func getLoopaAndPoopaNews(depth string) string {
 		return ""
 	}
 
-	indexes := cmn.InitArrayOfIndexes(len(vkWallResponse.Response.Items))
+	indexes := vk.InitArrayOfIndexes(len(vkWallResponse.Response.Items))
 	if len(indexes) <= 0 {
 		log.Println("Error init array of indexes...")
 		return ""

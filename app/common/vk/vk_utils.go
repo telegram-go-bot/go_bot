@@ -1,4 +1,4 @@
-package cmn
+package vk
 
 import (
 	"encoding/json"
@@ -23,8 +23,8 @@ type AuthResponse struct {
 	ErrorDescription string `json:"error_description"`
 }
 
-// VkWallGetResponse - wall.get response
-type VkWallGetResponse struct {
+// WallGetResponse - wall.get response
+type WallGetResponse struct {
 	Response struct {
 		Count int `json:"count"`
 		Items []struct {
@@ -131,8 +131,8 @@ type GetCommentsResponse struct {
 	} `json:"response"`
 }
 
-// VkAuth function makes authorization request and returns *AuthResponse structure
-func VkAuth(login string, password string) (*AuthResponse, error) {
+// Auth function makes authorization request and returns *AuthResponse structure
+func Auth(login string, password string) (*AuthResponse, error) {
 	var jsonResponse *AuthResponse
 	var requestURL = url.Values{
 		"grant_type":    {"password"},
@@ -157,7 +157,7 @@ func VkAuth(login string, password string) (*AuthResponse, error) {
 }
 
 // VkRequest function makes api method request and returns []byte JSON response
-func VkRequest(methodName string, parameters map[string]string) ([]byte, error) {
+func Request(methodName string, parameters map[string]string) ([]byte, error) {
 	requestURL, err := url.Parse(apiMethodURL + methodName)
 	if err != nil {
 		return nil, err
@@ -209,10 +209,10 @@ func InitArrayOfIndexes(size int) []int {
 
 var authResponse *AuthResponse
 
-//InitVKApi - log in to vk server and obtain access token
-func InitVKApi(vkLogin string, vkPwd string) error {
+//Init - log in to vk server and obtain access token
+func Init(vkLogin string, vkPwd string) error {
 	var err error
-	authResponse, err = VkAuth(vkLogin, vkPwd)
+	authResponse, err = Auth(vkLogin, vkPwd)
 	if err != nil {
 		return err
 	}

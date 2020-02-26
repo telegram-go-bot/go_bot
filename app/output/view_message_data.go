@@ -6,3 +6,9 @@ type ViewMessageData struct {
 	ChatID       int64
 	Text         string
 }
+
+// ViewImageData - shows image
+type ViewImageData struct {
+	ImageData []byte
+	ViewMessageData
+}

@@ -1,4 +1,4 @@
-package cmn
+package vk
 
 import "testing"
 
