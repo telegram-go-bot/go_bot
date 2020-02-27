@@ -1,1 +1,1 @@
-worker: bot-billy
+worker: go_bot
