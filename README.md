@@ -23,4 +23,4 @@ funny telegram bot in go.
 
 ### Todo:
  - [ ] Add UML diagram
- - [x] enable coverity
+ - [ ] enable coverity
