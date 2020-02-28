@@ -48,10 +48,7 @@ var (
 )
 
 func main() {
-	err := vk.Init(vkLogin, vkPwd)
-	if err != nil {
-		panic(err)
-	}
+	vk.Init(vkLogin, vkPwd)
 	tgBot := activityhandlers.NewActivityHandlerFacade(commandHandlers)
 	tgBot.ProcessActivities(tgReader)
 }

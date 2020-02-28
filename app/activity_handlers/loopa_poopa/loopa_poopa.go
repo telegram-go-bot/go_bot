@@ -2,6 +2,8 @@ package loopapoopa
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"log"
 	"strings"
 	"sync"
@@ -37,8 +39,11 @@ func (p impl) OnCommand(item domain.Activity) (bool, error) {
 		return false, nil
 	}
 	p.lock.Lock()
-	loopaNews := getLoopaAndPoopaNews("100")
+	loopaNews, err := getLoopaAndPoopaNews("100")
 	p.lock.Unlock()
+	if err != nil {
+		return true, err
+	}
 
 	SendMsg := func(message string) (int, error) {
 		return p.presenter.ShowMessage(output.ShowMessageData{ChatID: item.ChatID, Text: message})
@@ -46,43 +51,42 @@ func (p impl) OnCommand(item domain.Activity) (bool, error) {
 
 	if len(loopaNews) <= 0 {
 		SendMsg("Семь раз за Пупу и один раз за Лупу")
-	} else {
-		loopaNews = poopaToKostia(loopaNews)
-
-		_, err := SendMsg(loopaNews)
-		if err != nil {
-			return true, err
-		}
+		return true, errors.New("len(loopaNews) <= 0")
 	}
+
+	loopaNews = poopaToKostia(loopaNews)
+
+	_, err = SendMsg(loopaNews)
+	if err != nil {
+		return true, err
+	}
+
 	return true, nil
 }
 
 //----------------------------------------------------------------------------------------------------------
 
 // might return an empty string. Depth is int val up to 100
-func getLoopaAndPoopaNews(depth string) string {
+func getLoopaAndPoopaNews(depth string) (string, error) {
 	parameters := make(map[string]string)
 	parameters["count"] = depth // message
 	parameters["domain"] = "pupa_and_lupa"
 
 	resp, err := vk.Request("wall.get", parameters)
 	if err != nil {
-		log.Printf("wall.get request failed: %s\n", err)
-		return ""
+		return "", fmt.Errorf("wall.get request failed: %s", err)
 	}
 
 	var vkWallResponse vk.WallGetResponse
 
 	err = json.Unmarshal(resp, &vkWallResponse)
 	if err != nil {
-		log.Printf("Error unmarshalling json response: %s\n", err)
-		return ""
+		return "", fmt.Errorf("Error unmarshalling json response: %s", err)
 	}
 
 	indexes := vk.InitArrayOfIndexes(len(vkWallResponse.Response.Items))
 	if len(indexes) <= 0 {
-		log.Println("Error init array of indexes...")
-		return ""
+		return "", errors.New("Error init array of indexes")
 	}
 
 	for _, idx := range indexes {
@@ -101,9 +105,9 @@ func getLoopaAndPoopaNews(depth string) string {
 
 		text = strings.Replace(text, "<br>", "\n", -1)
 
-		return text
+		return text, nil
 	}
-	return ""
+	return "", nil
 }
 
 //poopaToKostia - превратили Пупу в Костю
