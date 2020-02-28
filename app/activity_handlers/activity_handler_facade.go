@@ -1,6 +1,8 @@
 package activityhandlers
 
 import (
+	"log"
+
 	raw "github.com/telegram-go-bot/go_bot/app/domain"
 	"github.com/telegram-go-bot/go_bot/app/input/activities"
 )
@@ -28,7 +30,8 @@ func (h *ActivityHandlerFacade) ProcessActivities(reader activities.IActivityRea
 		}
 		err = h.onActivity(activity)
 		if err != nil {
-			return err
+			log.Printf("ProcessActivity error: " + err.Error())
+			continue
 		}
 	}
 }

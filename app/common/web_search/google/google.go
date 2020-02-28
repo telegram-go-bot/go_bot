@@ -84,7 +84,6 @@ func (s Search) SearchImage(query string, searchDepth int) []string {
 		}
 
 		res = append(res, result.Link)
-		log.Printf("\t%s\n", result.Link)
 
 		if len(res) > searchDepth {
 			break

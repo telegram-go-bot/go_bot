@@ -76,7 +76,7 @@ func (p impl) onGooglePhotoImpl(item raw.Activity, strToFind string, depth int) 
 		images = p.searcher.SearchImage(strToFind, depth)
 		if len(images) == 0 {
 			SendMsg("Missing Data...")
-			return false, errors.New("0 images found looking for a: " + strToFind)
+			return false, errors.New("0 images found querying for a text : \"" + strToFind + "\"")
 		}
 		pickN := cmn.Rnd.Intn(len(images))
 		imageURL = images[pickN]
@@ -86,7 +86,7 @@ func (p impl) onGooglePhotoImpl(item raw.Activity, strToFind string, depth int) 
 
 	if len(imageURL) == 0 {
 		SendMsg(cmn.GetFailMsg())
-		return false, errors.New("Empty image URL found looking for a: " + strToFind)
+		return false, errors.New("Empty image URL found querying for a text : \"" + strToFind + "\"")
 	}
 
 	p.presenter.ShowImage(output.ShowImageData{

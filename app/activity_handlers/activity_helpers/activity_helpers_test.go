@@ -19,6 +19,11 @@ func TestIsOnCommand(t *testing.T) {
 	if ok {
 		t.Error("IsOnCommand invalid cmd fail")
 	}
+
+	cmd, ok := IsOnCommand("noo !cmd <3", []string{"cmd"})
+	if !ok || cmd != "<3" {
+		t.Error("IsOnCommand failed - cmd might be not at the beginning of the message")
+	}
 }
 
 func TestIsOnCommandParams(t *testing.T) {
