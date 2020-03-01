@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	activityhandlers "github.com/telegram-go-bot/go_bot/app/activity_handlers"
 	"github.com/telegram-go-bot/go_bot/app/activity_handlers/goroskop"
@@ -12,6 +14,7 @@ import (
 	pickfirstorsecond "github.com/telegram-go-bot/go_bot/app/activity_handlers/pick_first_or_second"
 	googlephoto "github.com/telegram-go-bot/go_bot/app/activity_handlers/search_photo"
 	"github.com/telegram-go-bot/go_bot/app/activity_handlers/zagadka"
+	cmn "github.com/telegram-go-bot/go_bot/app/common"
 	"github.com/telegram-go-bot/go_bot/app/common/vk"
 	collywrapper "github.com/telegram-go-bot/go_bot/app/common/web_scrapper/colly_wrapper"
 	"github.com/telegram-go-bot/go_bot/app/common/web_search/google"
@@ -48,6 +51,7 @@ var (
 )
 
 func main() {
+	cmn.Rnd = rand.New(rand.NewSource(time.Now().UnixNano()))
 	vk.Init(vkLogin, vkPwd)
 	tgBot := activityhandlers.NewActivityHandlerFacade(commandHandlers)
 	tgBot.ProcessActivities(tgReader)

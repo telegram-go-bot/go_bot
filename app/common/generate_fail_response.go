@@ -14,10 +14,11 @@ func GetFailMsg() string {
 		"no",
 		"нет"}
 
-	return getOneMsgFromMany(items)
+	return GetOneMsgFromMany(items...)
 }
 
-func getOneMsgFromMany(items []string) string {
+// GetOneMsgFromMany - wrapper for taking one msg from a set of
+func GetOneMsgFromMany(items ...string) string {
 	if len(items) == 0 {
 		return ""
 	}
