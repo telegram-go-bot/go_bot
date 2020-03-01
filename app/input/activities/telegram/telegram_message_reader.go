@@ -60,6 +60,19 @@ func (r *MessageReader) GetActivity() (raw.Activity, error) {
 	return *activity, nil
 }
 
+func toRaw(user *tgbotapi.User) *raw.User {
+	if user == nil {
+		return nil
+	}
+
+	var res = raw.User{
+		ID:       user.ID,
+		UserName: user.UserName,
+		IsBot:    user.IsBot}
+
+	return &res
+}
+
 // mapping
 func updateToActivity(update *tgbotapi.Update) *raw.Activity {
 	if update == nil {
@@ -68,8 +81,14 @@ func updateToActivity(update *tgbotapi.Update) *raw.Activity {
 
 	var res raw.Activity
 
-	res.Text = update.Message.Text
-	res.ChatID = update.Message.Chat.ID
+	if update.Message != nil {
+		res.Text = update.Message.Text
+		res.ChatID = update.Message.Chat.ID
+
+		if update.Message.LeftChatMember != nil {
+			res.LeftChatMember = toRaw(update.Message.LeftChatMember)
+		}
+	}
 
 	return &res
 }
