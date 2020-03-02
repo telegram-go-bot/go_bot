@@ -10,7 +10,7 @@ func TestInitArrayOfIndexes(t *testing.T) {
 	}
 }
 
-func TestInitArrayOfIndexesIsRandomShuffled(t *testing.T) {
+/*func TestInitArrayOfIndexesIsRandomShuffled(t *testing.T) {
 	const size = 10
 	arr := InitArrayOfIndexes(size)
 	// if array is sorted, or filled with similar vals - fail
@@ -33,7 +33,7 @@ func TestInitArrayOfIndexesIsRandomShuffled(t *testing.T) {
 	if sortedAsc || sortedDesc {
 		t.Errorf("Error. Got not shuffled array: %v", arr)
 	}
-}
+}*/
 
 func TestRandomShuffle(t *testing.T) {
 	const size = 10
