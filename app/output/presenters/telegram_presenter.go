@@ -46,7 +46,7 @@ func (s ActivityPresenter) ShowImage(imageData output.ShowImageData) (int, error
 	msg.ChatID = imageData.ChatID
 	msg.ReplyToMsgID = imageData.ReplyToMsgID
 	msg.ParseMode = imageData.ParseMode
-	msg.ImageData = bytes // todo(azerg): remove copy here
+	msg.ImageData = bytes // TODO: remove copy here
 
 	msgID, err := s.view.ShowImage(msg)
 	if err != nil {

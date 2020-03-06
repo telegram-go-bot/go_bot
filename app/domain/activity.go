@@ -3,6 +3,7 @@ package domain
 // Activity - received notification
 // Telegram receives message and this one describes it
 type Activity struct {
+	MesssageID     int
 	Text           string
 	ChatID         int64
 	LeftChatMember *User

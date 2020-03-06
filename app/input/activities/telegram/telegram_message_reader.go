@@ -91,6 +91,7 @@ func messageToRawActivity(msg *tgbotapi.Message, activityOut *raw.Activity) {
 	activityOut.Text = msg.Text
 	activityOut.ChatID = msg.Chat.ID
 	activityOut.Command = msg.Command()
+	activityOut.MesssageID = msg.MessageID
 }
 
 // mapping
