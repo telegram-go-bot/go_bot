@@ -53,7 +53,7 @@ var (
 func main() {
 	cmn.Rnd = rand.New(rand.NewSource(time.Now().UnixNano()))
 	vk.Init(vkLogin, vkPwd)
-	tgBot := activityhandlers.NewActivityHandlerFacade(commandHandlers)
+	tgBot := activityhandlers.New(commandHandlers, tgPresenter)
 	tgBot.ProcessActivities(tgReader)
 }
 

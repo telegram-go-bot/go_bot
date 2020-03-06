@@ -22,5 +22,7 @@ funny telegram bot in go.
 |PORT|~|
 
 ### Todo:
- - [ ] Add UML diagram
- - [ ] enable coverity
+  - [ ] Add UML diagram
+  - [x] enable coverity
+  - [ ] Fix coveralls
+  - [ ] + db

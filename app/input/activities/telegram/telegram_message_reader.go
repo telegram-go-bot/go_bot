@@ -1,6 +1,8 @@
 package telegram
 
 import (
+	"log"
+
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	raw "github.com/telegram-go-bot/go_bot/app/domain"
 	"github.com/telegram-go-bot/go_bot/app/output/views/telegram"
@@ -60,17 +62,35 @@ func (r *MessageReader) GetActivity() (raw.Activity, error) {
 	return *activity, nil
 }
 
-func toRaw(user *tgbotapi.User) *raw.User {
+func toRawUserPtr(user *tgbotapi.User) *raw.User {
 	if user == nil {
 		return nil
 	}
 
-	var res = raw.User{
+	res := toRawUser(user)
+	return &res
+}
+
+func toRawUser(user *tgbotapi.User) raw.User {
+	return raw.User{
 		ID:       user.ID,
 		UserName: user.UserName,
 		IsBot:    user.IsBot}
+}
 
-	return &res
+func messageToRawActivity(msg *tgbotapi.Message, activityOut *raw.Activity) {
+	if msg == nil {
+		return
+	}
+
+	if msg.Chat == nil {
+		log.Printf("Received message with empty ChatID !!! Message text is: %s\n", msg.Text)
+		return
+	}
+
+	activityOut.Text = msg.Text
+	activityOut.ChatID = msg.Chat.ID
+	activityOut.Command = msg.Command()
 }
 
 // mapping
@@ -79,16 +99,25 @@ func updateToActivity(update *tgbotapi.Update) *raw.Activity {
 		return nil
 	}
 
-	var res raw.Activity
-
+	var activity raw.Activity
 	if update.Message != nil {
-		res.Text = update.Message.Text
-		res.ChatID = update.Message.Chat.ID
-
+		messageToRawActivity(update.Message, &activity)
 		if update.Message.LeftChatMember != nil {
-			res.LeftChatMember = toRaw(update.Message.LeftChatMember)
+			leftUser := toRawUser(update.Message.LeftChatMember)
+			activity.LeftChatMember = &leftUser
+		}
+
+		if update.Message.NewChatMembers != nil {
+
+			countOfNewMembers := len(*update.Message.NewChatMembers)
+			newMembers := make([]raw.User, countOfNewMembers)
+			activity.NewChatMembers = &newMembers
+
+			for i := 0; i < countOfNewMembers; i++ {
+				(*activity.NewChatMembers)[i] = toRawUser(&(*update.Message.NewChatMembers)[i])
+			}
 		}
 	}
 
-	return &res
+	return &activity
 }

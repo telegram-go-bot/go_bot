@@ -48,6 +48,11 @@ func (t *APIView) ShowMessage(msg output.ViewMessageData) (int, error) {
 	if msg.ReplyToMsgID != 0 {
 		msgOut.ReplyToMessageID = msg.ReplyToMsgID
 	}
+
+	if msg.ParseMode == output.ParseModeHTML {
+		msgOut.ParseMode = tgbotapi.ModeHTML
+	}
+
 	sent, err := bot.Send(msgOut)
 	if err != nil {
 		return 0, err
@@ -68,6 +73,30 @@ func (t *APIView) ShowImage(msg output.ViewImageData) (int, error) {
 	photoMsg := tgbotapi.NewPhotoUpload(msg.ChatID, fileBytes)
 
 	sent, err := bot.Send(photoMsg)
+	if err != nil {
+		return 0, err
+	}
+
+	return sent.MessageID, nil
+}
+
+// ShowAnimation - display image using telegram bot api
+func (t *APIView) ShowAnimation(animation output.ViewAnimationData) (int, error) {
+	if len(animation.AnimationID) == 0 {
+		return 0,
+			errors.New("<TgApiView::ShowAnimation> empty image animation iD")
+	}
+
+	msg := tgbotapi.NewAnimationShare(animation.ChatID, animation.AnimationID)
+	if animation.ReplyToMsgID != 0 {
+		msg.ReplyToMessageID = animation.ReplyToMsgID
+	}
+
+	if len(animation.Caption) > 0 {
+		msg.Caption = animation.Caption
+	}
+
+	sent, err := bot.Send(msg)
 	if err != nil {
 		return 0, err
 	}

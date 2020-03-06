@@ -6,8 +6,9 @@ type Activity struct {
 	Text           string
 	ChatID         int64
 	LeftChatMember *User
-	NewChatmember  *[]User
+	NewChatMembers *[]User
 	RepliedTo      *Activity
+	Command        string // comamnd, sent straight to bot using messenger
 }
 
 // User - user representation

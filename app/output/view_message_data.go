@@ -5,10 +5,18 @@ type ViewMessageData struct {
 	ReplyToMsgID int
 	ChatID       int64
 	Text         string
+	ParseMode    int
 }
 
 // ViewImageData - shows image
 type ViewImageData struct {
 	ImageData []byte
+	ViewMessageData
+}
+
+// ViewAnimationData - shows image
+type ViewAnimationData struct {
+	AnimationID string
+	Caption     string
 	ViewMessageData
 }
