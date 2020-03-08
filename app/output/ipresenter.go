@@ -28,6 +28,8 @@ type ShowAnimationData struct {
 	ShowMessageData
 }
 
+//go:generate mockgen -destination=../mocks/mock_ipresenter.go -package=mocks github.com/telegram-go-bot/go_bot/app/output IPresenter
+
 // IPresenter - prepares data to display it via View
 // return: @sent_message_id, error
 type IPresenter interface {
