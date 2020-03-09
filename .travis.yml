@@ -12,6 +12,7 @@ go:
 
 before_install:
   - go get github.com/mattn/goveralls
+  - go get github.com/golang/mock/mockgen
 
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
