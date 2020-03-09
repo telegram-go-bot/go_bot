@@ -94,6 +94,30 @@ func messageToRawActivity(msg *tgbotapi.Message, activityOut *raw.Activity) {
 	activityOut.MesssageID = msg.MessageID
 }
 
+func updateLeftChatMember(activity *raw.Activity, message *tgbotapi.Message) {
+	if message.LeftChatMember != nil {
+		leftUser := toRawUser(message.LeftChatMember)
+		activity.LeftChatMember = &leftUser
+	}
+}
+
+func updateNewChatMembers(activity *raw.Activity, message *tgbotapi.Message) {
+	if message.NewChatMembers == nil {
+		return
+	}
+	countOfNewMembers := len(*message.NewChatMembers)
+	if countOfNewMembers == 0 {
+		return
+	}
+
+	newMembers := make([]raw.User, countOfNewMembers)
+	activity.NewChatMembers = &newMembers
+
+	for i := 0; i < countOfNewMembers; i++ {
+		(*activity.NewChatMembers)[i] = toRawUser(&(*message.NewChatMembers)[i])
+	}
+}
+
 // mapping
 func updateToActivity(update *tgbotapi.Update) *raw.Activity {
 	if update == nil {
@@ -103,21 +127,8 @@ func updateToActivity(update *tgbotapi.Update) *raw.Activity {
 	var activity raw.Activity
 	if update.Message != nil {
 		messageToRawActivity(update.Message, &activity)
-		if update.Message.LeftChatMember != nil {
-			leftUser := toRawUser(update.Message.LeftChatMember)
-			activity.LeftChatMember = &leftUser
-		}
-
-		if update.Message.NewChatMembers != nil {
-
-			countOfNewMembers := len(*update.Message.NewChatMembers)
-			newMembers := make([]raw.User, countOfNewMembers)
-			activity.NewChatMembers = &newMembers
-
-			for i := 0; i < countOfNewMembers; i++ {
-				(*activity.NewChatMembers)[i] = toRawUser(&(*update.Message.NewChatMembers)[i])
-			}
-		}
+		updateLeftChatMember(&activity, update.Message)
+		updateNewChatMembers(&activity, update.Message)
 	}
 
 	return &activity

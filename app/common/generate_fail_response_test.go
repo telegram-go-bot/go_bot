@@ -23,3 +23,10 @@ func TestGetOneMsgFromOne(t *testing.T) {
 		t.Error("GetOneMsgFromOne failed")
 	}
 }
+
+func TestGetFailMsgReturnsSmth(t *testing.T) {
+	msg := GetFailMsg()
+	if len(msg) == 0 {
+		t.Error("GetFailMsg failed returning empty string")
+	}
+}

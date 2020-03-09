@@ -4,6 +4,13 @@ import (
 	"testing"
 )
 
+func TestIsOnCommandNoCmd(t *testing.T) {
+	res, ok := IsOnCommand("cmd", []string{"cmd"})
+	if ok || res != "" {
+		t.Error("No command passed by some detected")
+	}
+}
+
 func TestIsOnCommand(t *testing.T) {
 	_, ok := IsOnCommand("!cmd", []string{"cmd"})
 	if !ok {

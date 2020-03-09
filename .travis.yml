@@ -21,8 +21,8 @@ before_script:
 
 script:
 - go generate ./...
-- $GOPATH/bin/goveralls -service=travis-ci
 - go test -coverprofile c.out ./...
+- $GOPATH/bin/goveralls -service=travis-ci
 
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT

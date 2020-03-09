@@ -46,6 +46,14 @@ func (h *ActivityHandlerFacade) initHelpMsg() string {
 	return htmlT.String()
 }
 
+func (h *ActivityHandlerFacade) displayHelpMsg(activity *raw.Activity) {
+	h.presenter.ShowMessage(
+		output.ShowMessageData{
+			ChatID:    activity.ChatID,
+			Text:      h.helpMsg,
+			ParseMode: output.ParseModeHTML})
+}
+
 // ProcessActivities - process all activities
 func (h *ActivityHandlerFacade) ProcessActivities(reader activities.IActivityReader) error {
 	for {
@@ -55,11 +63,7 @@ func (h *ActivityHandlerFacade) ProcessActivities(reader activities.IActivityRea
 		}
 
 		if activity.Command == "help" {
-			h.presenter.ShowMessage(
-				output.ShowMessageData{
-					ChatID:    activity.ChatID,
-					Text:      h.helpMsg,
-					ParseMode: output.ParseModeHTML})
+			h.displayHelpMsg(&activity)
 			continue
 		}
 
