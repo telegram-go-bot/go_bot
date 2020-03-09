@@ -1,5 +1,7 @@
 package output
 
+//go:generate mockgen -destination=../mocks/mock_iview.go -package=mocks github.com/telegram-go-bot/go_bot/app/output IView
+
 // IView - display smth
 // return: @sent_message_id, error
 type IView interface {
