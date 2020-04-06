@@ -129,6 +129,10 @@ func updateToActivity(update *tgbotapi.Update) *raw.Activity {
 		messageToRawActivity(update.Message, &activity)
 		updateLeftChatMember(&activity, update.Message)
 		updateNewChatMembers(&activity, update.Message)
+		if update.Message.ReplyToMessage != nil {
+			activity.RepliedTo = new(raw.Activity)
+			messageToRawActivity(update.Message.ReplyToMessage, activity.RepliedTo)
+		}
 	}
 
 	return &activity

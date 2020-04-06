@@ -36,17 +36,22 @@ func (s ActivityPresenter) ShowMessage(data output.ShowMessageData) (int, error)
 // ShowImage - Download image from URL and show it
 func (s ActivityPresenter) ShowImage(imageData output.ShowImageData) (int, error) {
 
-	bytes, err := cmn.DownloadFileByURL(imageData.ImageURL)
-	if err != nil {
-		return 0, err
+	var msg output.ViewImageData
+
+	if imageData.RawImageData != nil {
+		msg.ImageData = imageData.RawImageData
+	} else {
+		var err error
+		msg.ImageData, err = cmn.DownloadFileByURL(imageData.ImageURL)
+		if err != nil {
+			return 0, err
+		}
 	}
 
-	var msg output.ViewImageData
 	msg.Text = imageData.Text
 	msg.ChatID = imageData.ChatID
 	msg.ReplyToMsgID = imageData.ReplyToMsgID
 	msg.ParseMode = imageData.ParseMode
-	msg.ImageData = bytes // TODO: remove copy here
 
 	msgID, err := s.view.ShowImage(msg)
 	if err != nil {

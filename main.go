@@ -12,6 +12,7 @@ import (
 	"github.com/telegram-go-bot/go_bot/app/activity_handlers/goroskop"
 	loopapoopa "github.com/telegram-go-bot/go_bot/app/activity_handlers/loopa_poopa"
 	memberinout "github.com/telegram-go-bot/go_bot/app/activity_handlers/member_in_out"
+	"github.com/telegram-go-bot/go_bot/app/activity_handlers/otpetushi"
 	pickfirstorsecond "github.com/telegram-go-bot/go_bot/app/activity_handlers/pick_first_or_second"
 	googlephoto "github.com/telegram-go-bot/go_bot/app/activity_handlers/search_photo"
 	"github.com/telegram-go-bot/go_bot/app/activity_handlers/zagadka"
@@ -49,7 +50,8 @@ var (
 		goroskop.New(tgPresenter, scrapper),
 		googlephoto.New(tgPresenter, webSearcher),
 		loopapoopa.New(tgPresenter),
-		memberinout.New(tgPresenter)}
+		memberinout.New(tgPresenter),
+		otpetushi.New(tgPresenter)}
 )
 
 func main() {

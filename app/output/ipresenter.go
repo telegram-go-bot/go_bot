@@ -17,7 +17,8 @@ type ShowMessageData struct {
 
 // ShowImageData - feed presenter's ShowImage with this
 type ShowImageData struct {
-	ImageURL string
+	ImageURL     string
+	RawImageData []byte
 	ShowMessageData
 }
 
