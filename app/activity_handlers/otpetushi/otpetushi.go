@@ -51,12 +51,7 @@ func (p impl) OnHelp() string {
 func (p impl) OnCommand(item raw.Activity) (bool, error) {
 
 	_, isThisCommand := helpers.IsOnCommand(item.Text, []string{"отпетуши", "петуши", "petushi", "otpetushi"})
-	if !isThisCommand {
-		return false, nil
-	}
-
-	// if no repliedTo - silently return
-	if item.RepliedTo == nil {
+	if !isThisCommand || item.RepliedTo == nil {
 		return false, nil
 	}
 
@@ -73,16 +68,10 @@ func (p impl) OnCommand(item raw.Activity) (bool, error) {
 		return true, imgErr
 	}
 
-	// can we cache this?
-	dc := gg.NewContext(srcImgWidth, srcImgHeight)
-	dc.SetRGB(1, 1, 1)
-	dc.Clear()
-	dc.SetRGB(0, 0, 0)
-	if err := dc.LoadFontFace(srcFontPath, fontSize); err != nil {
+	dc, err := initDc()
+	if err != nil {
 		return true, err
 	}
-
-	dc.DrawImage(img, 0, 0)
 
 	drawOriginalText(item.RepliedTo.Text, dc)
 	drawTranslatedText(messageToKoKo(item.RepliedTo.Text), dc)
@@ -90,14 +79,23 @@ func (p impl) OnCommand(item raw.Activity) (bool, error) {
 	var memImg bytes.Buffer
 	png.Encode(&memImg, dc.Image())
 
-	_, err := p.presenter.ShowImage(output.ShowImageData{
+	_, err = p.presenter.ShowImage(output.ShowImageData{
 		RawImageData:    memImg.Bytes(),
 		ShowMessageData: output.ShowMessageData{ChatID: item.ChatID, ReplyToMsgID: item.RepliedTo.MesssageID}})
-	if err != nil {
-		return true, err
-	}
-
 	return true, nil
+}
+
+func initDc() (*gg.Context, error) {
+	// can we cache this?
+	dc := gg.NewContext(srcImgWidth, srcImgHeight)
+	dc.SetRGB(1, 1, 1)
+	dc.Clear()
+	dc.SetRGB(0, 0, 0)
+	if err := dc.LoadFontFace(srcFontPath, fontSize); err != nil {
+		return nil, err
+	}
+	dc.DrawImage(img, 0, 0)
+	return dc, nil
 }
 
 func isChar(char rune) bool {
@@ -157,7 +155,7 @@ func messageToKoKo(message string) string {
 	return strings.TrimSpace(res.String())
 }
 
-func drawOriginalText(str string, dc *gg.Context) {
+func spliToLinesIfNeeded(str string, dc *gg.Context) string {
 	lines := dc.WordWrap(str, maxLineWidth)
 	if len(lines) > maxLines {
 		var maxPossibleString int // cut more than 6 lines to fit "translate window"
@@ -167,20 +165,15 @@ func drawOriginalText(str string, dc *gg.Context) {
 
 		str = str[:maxPossibleString]
 	}
+	return str
+}
 
+func drawOriginalText(str string, dc *gg.Context) {
+	str = spliToLinesIfNeeded(str, dc)
 	dc.DrawStringWrapped(str, 30, topY, 0.0, 0.0, maxLineWidth, lineSpacing, gg.AlignLeft)
 }
 
 func drawTranslatedText(str string, dc *gg.Context) {
-	lines := dc.WordWrap(str, maxLineWidth)
-	if len(lines) > maxLines {
-		var maxPossibleString int // cut more than 6 lines to fit "translate window"
-		for lineIdx := 0; lineIdx < maxLines; lineIdx++ {
-			maxPossibleString += len(lines[lineIdx])
-		}
-
-		str = str[:maxPossibleString]
-	}
-
+	str = spliToLinesIfNeeded(str, dc)
 	dc.DrawStringWrapped(str, 470, topY, 0.0, 0.0, maxLineWidth, lineSpacing, gg.AlignLeft)
 }
