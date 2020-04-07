@@ -63,7 +63,7 @@ func TestWordToKoKo_pi(t *testing.T) {
 
 // dont support numbers inside word. Just replace with koko as usual symbols
 func TestWordToKoKo_number_inside(t *testing.T) {
-	const src3 string = "he11ooo"
+	const src3 string = "he11o05"
 
 	src3_2 := wordToKoKo(src3)
 	if src3_2 != Ko+Ko+Koo {
@@ -80,11 +80,20 @@ func TestMessageUnicode(t *testing.T) {
 	}
 }
 
-/*func TestMessage0(t *testing.T) {
+func TestMessage0(t *testing.T) {
 	const src3 string = "!отпетуши"
 
 	src3_2 := messageToKoKo(src3)
 	if src3_2 != "!"+Ko+Ko+Ko+Ko {
 		t.Error("any_unicode N chars src -> ~N koko's")
 	}
-}*/
+}
+
+func TestMessageNonAlphabetChars(t *testing.T) {
+	const src3 string = "ra + 28ва = !-=\\€"
+
+	src3_2 := messageToKoKo(src3)
+	if src3_2 != Ko+" + "+Ko+Ko+" = !-=\\€" {
+		t.Error("We should preserve all non-alphabet symbols")
+	}
+}

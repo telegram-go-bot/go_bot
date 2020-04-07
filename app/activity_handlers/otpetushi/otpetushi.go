@@ -85,8 +85,9 @@ func (p impl) OnCommand(item raw.Activity) (bool, error) {
 	return true, nil
 }
 
+// have to be called each time new image is created,
+// because we write text on DC created
 func initDc() (*gg.Context, error) {
-	// can we cache this?
 	dc := gg.NewContext(srcImgWidth, srcImgHeight)
 	dc.SetRGB(1, 1, 1)
 	dc.Clear()
@@ -139,20 +140,45 @@ func wordToKoKo(word string) string {
 	return res.String()
 }
 
+func isGoodChar(ch rune) bool {
+	if ch >= '0' && ch <= '9' {
+		return true
+	}
+
+	if ch >= 'A' && ch <= 'Z' || (ch >= 'a' && ch <= 'z') {
+		return true
+	}
+
+	if ch >= 'А' && ch <= 'Я' || (ch >= 'а' && ch <= 'я') {
+		return true
+	}
+
+	return false
+}
+
 func messageToKoKo(message string) string {
-	words := strings.Fields(message)
 
-	if words == nil {
-		return ""
+	var res, word strings.Builder
+
+	var flushWord = func() {
+		if word.Len() != 0 {
+			res.WriteString(wordToKoKo(word.String()))
+			word.Reset()
+		}
 	}
 
-	var res strings.Builder
-	for _, word := range words {
-		res.WriteString(wordToKoKo(word))
-		res.WriteString(" ")
+	for _, ch := range message {
+		if isGoodChar(ch) {
+			word.WriteString(string(ch))
+			continue
+		}
+
+		flushWord()
+		res.WriteString(string(ch))
 	}
 
-	return strings.TrimSpace(res.String())
+	flushWord()
+	return res.String()
 }
 
 func spliToLinesIfNeeded(str string, dc *gg.Context) string {
