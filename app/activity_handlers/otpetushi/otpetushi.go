@@ -153,6 +153,10 @@ func isGoodChar(ch rune) bool {
 		return true
 	}
 
+	if ch == 'Ё' || ch == 'ё' {
+		return true
+	}
+
 	return false
 }
 
