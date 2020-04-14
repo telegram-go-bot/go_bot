@@ -9,6 +9,7 @@ import (
 	"time"
 
 	activityhandlers "github.com/telegram-go-bot/go_bot/app/activity_handlers"
+	qwertyFix "github.com/telegram-go-bot/go_bot/app/activity_handlers/fix_layout"
 	"github.com/telegram-go-bot/go_bot/app/activity_handlers/goroskop"
 	loopapoopa "github.com/telegram-go-bot/go_bot/app/activity_handlers/loopa_poopa"
 	memberinout "github.com/telegram-go-bot/go_bot/app/activity_handlers/member_in_out"
@@ -51,7 +52,8 @@ var (
 		googlephoto.New(tgPresenter, webSearcher),
 		loopapoopa.New(tgPresenter),
 		memberinout.New(tgPresenter),
-		otpetushi.New(tgPresenter)}
+		otpetushi.New(tgPresenter),
+		qwertyFix.New(tgPresenter)}
 )
 
 func main() {

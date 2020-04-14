@@ -2,6 +2,7 @@ package googlephoto
 
 import (
 	"errors"
+	"log"
 	"net/url"
 
 	helpers "github.com/telegram-go-bot/go_bot/app/activity_handlers/activity_helpers"
@@ -88,6 +89,8 @@ func (p impl) onGooglePhotoImpl(item raw.Activity, strToFind string, depth int) 
 		SendMsg(cmn.GetFailMsg())
 		return false, errors.New("Empty image URL found querying for a text : \"" + strToFind + "\"")
 	}
+
+	log.Printf("Selected image url: " + imageURL)
 
 	p.presenter.ShowImage(output.ShowImageData{
 		ImageURL:        imageURL,
