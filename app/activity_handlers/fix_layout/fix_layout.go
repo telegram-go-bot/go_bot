@@ -111,13 +111,13 @@ func New(presenter output.IPresenter) Impl {
 
 // OnHelp - display help
 func (p Impl) OnHelp() string {
-	return "<b>!fix|fixtext|исправь</b> <i>replied_to_message</i> - поправим месадж с правильной раскладкой"
+	return "<b>!fix|fixtext|исправь|фикс</b> <i>replied_to_message</i> - поправим месадж с правильной раскладкой"
 }
 
 // OnCommand -
 func (p Impl) OnCommand(item raw.Activity) (bool, error) {
 
-	_, isThisCommand := helpers.IsOnCommand(item.Text, []string{"fix", "fixtext", "исправь"})
+	_, isThisCommand := helpers.IsOnCommand(item.Text, []string{"fix", "fixtext", "исправь", "фикс"})
 	if !isThisCommand || item.RepliedTo == nil {
 		return false, nil
 	}
