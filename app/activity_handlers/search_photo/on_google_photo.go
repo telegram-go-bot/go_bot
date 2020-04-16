@@ -3,7 +3,6 @@ package googlephoto
 import (
 	"errors"
 	"log"
-	"net/url"
 
 	helpers "github.com/telegram-go-bot/go_bot/app/activity_handlers/activity_helpers"
 	cmn "github.com/telegram-go-bot/go_bot/app/common"
@@ -48,20 +47,30 @@ func (p impl) OnCommand(item raw.Activity) (bool, error) {
 	return p.onGooglePhotoImpl(item, strToFind, p.prevDepthVal)
 }
 
-/*
-	// if one query was repeated several times - increase set of images to choose from
-	if strToFind == prevQuery {
-		prevDepthVal = prevDepthVal + 5
-	} else {
-		prevQuery = strToFind
-		prevDepthVal = google.GMaxImagesResult
+func (p impl) showImageByURL(url string, chatID int64) (bool, error) {
+	if len(url) == 0 {
+		p.presenter.ShowMessage(output.ShowMessageData{ChatID: chatID, Text: cmn.GetFailMsg()})
+		return false, errors.New("Empty image URL found querying for a text-URL")
 	}
 
-	return OnGooglePhotoImpl(chatID, strToFind, prevDepthVal, bot)
+	log.Printf("ShowImageByURL: " + url)
+
+	_, err := p.presenter.ShowImage(output.ShowImageData{
+		ImageURL:        url,
+		ShowMessageData: output.ShowMessageData{ChatID: chatID}})
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }
 
-//------------------------------------------------------------------------------------------------------
-*/
+func erase(a []string, idx int) []string {
+	a[idx] = a[len(a)-1] // Copy last element to index i.
+	a[len(a)-1] = ""     // Erase last element (write zero value).
+	a = a[:len(a)-1]     // Truncate slice.
+	return a
+}
+
 // OnGooglePhotoImpl - underlying (private) impl of image querier
 func (p impl) onGooglePhotoImpl(item raw.Activity, strToFind string, depth int) (bool, error) {
 
@@ -71,30 +80,32 @@ func (p impl) onGooglePhotoImpl(item raw.Activity, strToFind string, depth int) 
 
 	var imageURL string
 	var images []string
-	// search for query string for an image
-	_, err := url.ParseRequestURI(strToFind)
-	if err != nil {
-		images = p.searcher.SearchImage(strToFind, depth)
+
+	images = p.searcher.SearchImage(strToFind, depth)
+	if len(images) == 0 {
+		SendMsg("Missing Data...")
+		return true, errors.New("0 images found querying for a text : \"" + strToFind + "\"")
+	}
+
+	for attempts := len(images); attempts != 0; attempts-- {
+
 		if len(images) == 0 {
-			SendMsg("Missing Data...")
-			return false, errors.New("0 images found querying for a text : \"" + strToFind + "\"")
+			SendMsg(cmn.GetFailMsg())
+			return true, errors.New("No more URLS left for a text : \"" + strToFind + "\"")
 		}
+
 		pickN := cmn.Rnd.Intn(len(images))
 		imageURL = images[pickN]
-	} else { // if parameter is url - use it
-		imageURL = strToFind
+
+		images = erase(images, pickN)
+
+		done, err := p.showImageByURL(imageURL, item.ChatID)
+		if done && err == nil {
+			return true, nil
+		}
+
+		continue
 	}
 
-	if len(imageURL) == 0 {
-		SendMsg(cmn.GetFailMsg())
-		return false, errors.New("Empty image URL found querying for a text : \"" + strToFind + "\"")
-	}
-
-	log.Printf("Selected image url: " + imageURL)
-
-	p.presenter.ShowImage(output.ShowImageData{
-		ImageURL:        imageURL,
-		ShowMessageData: output.ShowMessageData{ChatID: item.ChatID}})
-
-	return true, nil
+	return true, errors.New("No more URLS left for a text : \"" + strToFind + "\"")
 }
