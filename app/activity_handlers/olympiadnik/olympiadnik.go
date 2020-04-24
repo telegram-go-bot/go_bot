@@ -30,7 +30,7 @@ func (p Impl) OnHelp() string {
 // OnCommand -
 func (p Impl) OnCommand(item raw.Activity) (bool, error) {
 
-	if strings.Index(item.Text, "олимпиадник") == -1 {
+	if strings.Index(strings.ToLower(item.Text), "олимпиадник") == -1 {
 		return false, nil
 	}
 
