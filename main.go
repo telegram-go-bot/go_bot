@@ -13,15 +13,16 @@ import (
 	"github.com/telegram-go-bot/go_bot/app/activity_handlers/goroskop"
 	loopapoopa "github.com/telegram-go-bot/go_bot/app/activity_handlers/loopa_poopa"
 	memberinout "github.com/telegram-go-bot/go_bot/app/activity_handlers/member_in_out"
+	"github.com/telegram-go-bot/go_bot/app/activity_handlers/olympiadnik"
 	"github.com/telegram-go-bot/go_bot/app/activity_handlers/otpetushi"
 	pickfirstorsecond "github.com/telegram-go-bot/go_bot/app/activity_handlers/pick_first_or_second"
 	googlephoto "github.com/telegram-go-bot/go_bot/app/activity_handlers/search_photo"
-	"github.com/telegram-go-bot/go_bot/app/activity_handlers/olympiadnik"
 	"github.com/telegram-go-bot/go_bot/app/activity_handlers/zagadka"
 	cmn "github.com/telegram-go-bot/go_bot/app/common"
 	"github.com/telegram-go-bot/go_bot/app/common/vk"
 	collywrapper "github.com/telegram-go-bot/go_bot/app/common/web_scrapper/colly_wrapper"
 	"github.com/telegram-go-bot/go_bot/app/common/web_search/google"
+	settings "github.com/telegram-go-bot/go_bot/app/database"
 	in "github.com/telegram-go-bot/go_bot/app/input/activities/telegram"
 	presenters "github.com/telegram-go-bot/go_bot/app/output/presenters"
 	"github.com/telegram-go-bot/go_bot/app/output/views/telegram"
@@ -58,8 +59,23 @@ var (
 		olympiadnik.New(tgPresenter, webSearcher)}
 )
 
+func initSettings(url string) error {
+	cache, err := settings.NewCache(url)
+	if err != nil {
+		return err
+	}
+	settings.New(cache)
+	return nil
+}
+
 func main() {
 	cmn.Rnd = rand.New(rand.NewSource(time.Now().UnixNano()))
+
+	err := initSettings(dbURL)
+	if err != nil {
+		panic("init settings failed")
+	}
+
 	vk.Init(vkLogin, vkPwd)
 	tgBot := activityhandlers.New(commandHandlers, tgPresenter)
 	tgBot.ProcessActivities(tgReader)

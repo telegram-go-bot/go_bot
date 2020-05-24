@@ -4,6 +4,7 @@ import (
 	"log"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
+	settings "github.com/telegram-go-bot/go_bot/app/database"
 	raw "github.com/telegram-go-bot/go_bot/app/domain"
 	"github.com/telegram-go-bot/go_bot/app/output/views/telegram"
 )
@@ -13,6 +14,34 @@ type MessageReader struct {
 	bot                *tgbotapi.BotAPI
 	startedLoop        bool
 	receivedActivities chan *raw.Activity
+}
+
+// returns false if no message should be processed from definite chat
+// Message != nil
+// Message.Chat != nil
+func confirureSettingsForMessage(msg *tgbotapi.Message) bool {
+	chatID := msg.Chat.ID
+	chatInfo, err := settings.Inst().GetChatInfo(chatID)
+	if err != nil {
+		// ok no chatInfo exists - create new one
+		chatInfo = &raw.ChatInfo{}
+		chatInfo.ChatID = chatID
+		chatInfo.Name = msg.Chat.Title
+		settings.Inst().AddRecord(chatInfo)
+		return true
+	}
+	return chatInfo.Enabled
+}
+
+func configureUsersForMessage(msg *tgbotapi.Message) {
+	if msg.From == nil {
+		return
+	}
+	_, err := settings.Inst().GetChatUser(msg.From.ID)
+	if err != nil { // no user exists. persist one
+		newUser := messageToChatUser(msg)
+		settings.Inst().AddRecord(newUser)
+	}
 }
 
 // NewMessageReader - constructor
@@ -43,6 +72,14 @@ func (r *MessageReader) activitiesProducer() error {
 		if update.Message.Chat == nil {
 			continue // what about new member event ? other events?
 		}
+
+		// skip chat if it is disabled, or add if new
+		if !confirureSettingsForMessage(update.Message) {
+			continue
+		}
+
+		// process users
+		configureUsersForMessage(update.Message)
 
 		r.receivedActivities <- updateToActivity(&update)
 	}
@@ -136,4 +173,14 @@ func updateToActivity(update *tgbotapi.Update) *raw.Activity {
 	}
 
 	return &activity
+}
+
+func messageToChatUser(msg *tgbotapi.Message) *raw.ChatUser {
+	usr := msg.From
+	newUser := &raw.ChatUser{
+		UserID:       usr.ID,
+		UserName:     usr.UserName,
+		ChatID:       msg.Chat.ID,
+		ChatUserInfo: raw.ChatUserInfo{FirstName: usr.FirstName, LastName: usr.LastName}}
+	return newUser
 }
