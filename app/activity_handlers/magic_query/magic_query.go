@@ -2,6 +2,7 @@ package magicquery
 
 import (
 	"errors"
+	"log"
 	"sort"
 	"strings"
 	"sync"
@@ -71,11 +72,13 @@ func (p Impl) ReadMagics() error {
 	p.cachelocker.Lock()
 	defer p.cachelocker.Unlock()
 	magics := []MagicQuery{}
+	log.Printf("ReadMagics::GetHandlerRecords: %v", magics)
 	err := settings.Inst().GetHandlerRecords(&magics)
 	if err != nil {
 		return err
 	}
 
+	log.Printf("ReadMagics. Magics list: %v", magics)
 	for _, savedQuery := range magics {
 		p.cachedQueries[savedQuery.Command] =
 			createValuesEntry(savedQuery.Value, savedQuery.ValueType, savedQuery.ID)
