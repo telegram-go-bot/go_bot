@@ -50,7 +50,6 @@ func (p *Settings) GetChatUser(userID int) (*raw.ChatUser, error) {
 		return nil, err
 	}
 
-	// err = db.Debug().Model(&user).Related(&emails, "Emails").Error
 	err = p.db.Model(&chatUser).Related(&chatUser.ChatUserInfo, "ChatUserInfo").Error
 	if err != nil {
 		return nil, err
@@ -59,8 +58,31 @@ func (p *Settings) GetChatUser(userID int) (*raw.ChatUser, error) {
 	return &chatUser, nil
 }
 
+// GetHandlerRecords -
+func (p *Settings) GetHandlerRecords(out interface{}) error {
+	err := p.db.Find(out).Error
+	if err != nil {
+		if p.db.HasTable(out) {
+			return err
+		}
+	}
+	return nil
+}
+
 // AddRecord - insert record to db
 func (p *Settings) AddRecord(newRec interface{}) error {
+
+	if !p.db.HasTable(newRec) {
+		p.db.CreateTable(newRec)
+	}
+
 	err := p.db.Create(newRec).Error
+	return err
+}
+
+// UpdateRecord - update existing
+func (p *Settings) UpdateRecord(newRec interface{}) error {
+	// todo: update only defined fields...
+	err := p.db.Save(newRec).Error
 	return err
 }

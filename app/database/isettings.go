@@ -13,11 +13,15 @@ type ISettingsOpener interface {
 type ISettingsReader interface {
 	GetChatInfo(chatID int64) (*raw.ChatInfo, error)
 	GetChatUser(userID int) (*raw.ChatUser, error)
+	// get all db entries, related to a definite handler (e.g. settings for a Handler)
+	// Mapping interface{} to struct is up to handler
+	GetHandlerRecords(out interface{}) error
 }
 
 // ISettingsWriter - add new entries
 type ISettingsWriter interface {
 	AddRecord(newRec interface{}) error
+	UpdateRecord(modifiedRec interface{}) error
 }
 
 // ISettings - repository

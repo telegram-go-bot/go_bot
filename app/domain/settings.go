@@ -13,7 +13,7 @@ type ChatInfo struct {
 
 // ChatUserInfo - detailed user info
 type ChatUserInfo struct {
-	ID           uint `gorm:"primary_key"`
+	ChatUserRef  uint `gorm:"primary_key"`
 	SentMessages uint
 	FirstName    string
 	LastName     string
@@ -26,7 +26,7 @@ type ChatUser struct {
 	UserID       int    `gorm:"unique"`
 	UserName     string `gorm:"unique"`
 	ChatID       int64
-	ChatUserInfo ChatUserInfo `gorm:"foreignkey:ID"`
+	ChatUserInfo ChatUserInfo `gorm:"foreignkey:ChatUserRef"`
 }
 
 // BasicTables - list of known basic tables

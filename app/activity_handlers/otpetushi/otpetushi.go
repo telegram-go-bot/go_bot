@@ -55,6 +55,10 @@ func (p impl) OnCommand(item raw.Activity) (bool, error) {
 		return false, nil
 	}
 
+	if len(item.RepliedTo.Text) == 0 {
+		return true, nil
+	}
+
 	SendMsg := func(message string) (int, error) {
 		return p.presenter.ShowMessage(output.ShowMessageData{ChatID: item.ChatID, Text: message})
 	}

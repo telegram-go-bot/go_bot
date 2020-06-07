@@ -12,8 +12,8 @@ import (
 	qwertyFix "github.com/telegram-go-bot/go_bot/app/activity_handlers/fix_layout"
 	"github.com/telegram-go-bot/go_bot/app/activity_handlers/goroskop"
 	loopapoopa "github.com/telegram-go-bot/go_bot/app/activity_handlers/loopa_poopa"
+	magicquery "github.com/telegram-go-bot/go_bot/app/activity_handlers/magic_query"
 	memberinout "github.com/telegram-go-bot/go_bot/app/activity_handlers/member_in_out"
-	"github.com/telegram-go-bot/go_bot/app/activity_handlers/olympiadnik"
 	"github.com/telegram-go-bot/go_bot/app/activity_handlers/otpetushi"
 	pickfirstorsecond "github.com/telegram-go-bot/go_bot/app/activity_handlers/pick_first_or_second"
 	googlephoto "github.com/telegram-go-bot/go_bot/app/activity_handlers/search_photo"
@@ -41,11 +41,12 @@ var (
 )
 
 var (
-	tgView      = telegram.NewTelegramAPIView(botToken)
-	tgPresenter = presenters.NewActivityPresenter(tgView)
-	tgReader    = in.NewMessageReader(botToken)
-	scrapper    = collywrapper.Scrapper{}
-	webSearcher = google.Init(googleSearchAPIKey, googleSearchEngineID)
+	tgView       = telegram.NewTelegramAPIView(botToken)
+	tgPresenter  = presenters.NewActivityPresenter(tgView)
+	tgReader     = in.NewMessageReader(botToken)
+	scrapper     = collywrapper.Scrapper{}
+	webSearcher  = google.Init(googleSearchAPIKey, googleSearchEngineID)
+	settingsInit = initSettings(dbURL)
 
 	commandHandlers = []activityhandlers.ICommandHandler{
 		pickfirstorsecond.New(tgPresenter),
@@ -56,7 +57,7 @@ var (
 		memberinout.New(tgPresenter),
 		otpetushi.New(tgPresenter),
 		qwertyFix.New(tgPresenter),
-		olympiadnik.New(tgPresenter, webSearcher)}
+		magicquery.New(tgPresenter, webSearcher)}
 )
 
 func initSettings(url string) error {
@@ -71,8 +72,7 @@ func initSettings(url string) error {
 func main() {
 	cmn.Rnd = rand.New(rand.NewSource(time.Now().UnixNano()))
 
-	err := initSettings(dbURL)
-	if err != nil {
+	if settingsInit != nil {
 		panic("init settings failed")
 	}
 

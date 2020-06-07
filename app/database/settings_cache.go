@@ -38,6 +38,11 @@ func (p *Cache) AddRecord(newRec interface{}) error {
 	return p.settings.AddRecord(newRec)
 }
 
+// UpdateRecord -
+func (p *Cache) UpdateRecord(newRec interface{}) error {
+	return p.settings.UpdateRecord(newRec)
+}
+
 // GetChatInfo -
 func (p *Cache) GetChatInfo(chatID int64) (*raw.ChatInfo, error) {
 	return p.settings.GetChatInfo(chatID)
@@ -59,4 +64,9 @@ func (p *Cache) GetChatUser(userID int) (*raw.ChatUser, error) {
 	// cache queried user
 	chatUsers[userID] = user
 	return user, nil
+}
+
+// GetHandlerRecords - should we cache this?
+func (p *Cache) GetHandlerRecords(out interface{}) error {
+	return p.settings.GetHandlerRecords(out)
 }
