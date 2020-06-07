@@ -71,8 +71,8 @@ func createValuesEntry(value string, valueType string, dbID uint) Values {
 func (p Impl) ReadMagics() error {
 	p.cachelocker.Lock()
 	defer p.cachelocker.Unlock()
-	magics := []MagicQuery{}
-	log.Printf("ReadMagics::GetHandlerRecords: %v", magics)
+	var magics []MagicQuery
+	log.Printf("ReadMagics::GetHandlerRecords: %v. Settings: %v", magics, settings.Inst())
 	err := settings.Inst().GetHandlerRecords(&magics)
 	if err != nil {
 		return err

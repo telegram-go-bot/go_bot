@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"math/rand"
 	"net/http"
 	"os"
@@ -61,6 +62,7 @@ var (
 )
 
 func initSettings(url string) error {
+	log.Printf("initializing settings: %s", url)
 	cache, err := settings.NewCache(url)
 	if err != nil {
 		return err
