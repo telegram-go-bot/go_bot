@@ -55,7 +55,7 @@ func New(presenter output.IPresenter, searcher websearch.Searcher) Impl {
 	tmp.cachedQueries = make(map[string]Values)
 	err := tmp.ReadMagics()
 	if err != nil {
-		panic(err.Error())
+		panic("Error reading magics: " + err.Error())
 	}
 	return tmp
 }
