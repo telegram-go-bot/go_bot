@@ -271,9 +271,16 @@ func (p Impl) OnCommand(item raw.Activity) (bool, error) {
 		resultURL = images[pickN]
 	}
 
+	var replyToMsgID int = 0
+	if item.RepliedTo != nil {
+		replyToMsgID = item.RepliedTo.MesssageID
+	}
+
 	p.presenter.ShowImage(output.ShowImageData{
-		ImageURL:        resultURL,
-		ShowMessageData: output.ShowMessageData{ChatID: item.ChatID}})
+		ImageURL: resultURL,
+		ShowMessageData: output.ShowMessageData{
+			ChatID:       item.ChatID,
+			ReplyToMsgID: replyToMsgID}})
 
 	return true, nil
 }
