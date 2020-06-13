@@ -109,7 +109,7 @@ func formatResponse(item raw.Activity, all covidJSON, ua covidCountry) (output.S
 	buffer.WriteString("\n")
 
 	for _, country := range all.Countries {
-		buffer.WriteString(countryFromASCII(country.CountryCode) + " " + toString(country.TotalConfirmed) + " (+" + toString(country.NewConfirmed) + ")\n")
+		buffer.WriteString(countryFromASCII(country.CountryCode) + " *" + toString(country.TotalConfirmed) + "* (+" + toString(country.NewConfirmed) + ")\n")
 	}
 
 	buffer.WriteString("\n")
