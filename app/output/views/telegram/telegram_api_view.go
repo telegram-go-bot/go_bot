@@ -51,6 +51,8 @@ func (t *APIView) ShowMessage(msg output.ViewMessageData) (int, error) {
 
 	if msg.ParseMode == output.ParseModeHTML {
 		msgOut.ParseMode = tgbotapi.ModeHTML
+	} else if msg.ParseMode == output.ParseModeMarkdown {
+		msgOut.ParseMode = tgbotapi.ModeMarkdown
 	}
 
 	sent, err := bot.Send(msgOut)
@@ -71,11 +73,11 @@ func (t *APIView) ShowImage(msg output.ViewImageData) (int, error) {
 
 	fileBytes := tgbotapi.FileBytes{Name: "", Bytes: msg.ImageData}
 	photoMsg := tgbotapi.NewPhotoUpload(msg.ChatID, fileBytes)
-	
+
 	if msg.ReplyToMsgID != 0 {
 		photoMsg.ReplyToMessageID = msg.ReplyToMsgID
 	}
-	
+
 	sent, err := bot.Send(photoMsg)
 	if err != nil {
 		return 0, err

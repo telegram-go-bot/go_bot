@@ -10,6 +10,7 @@ import (
 	"time"
 
 	activityhandlers "github.com/telegram-go-bot/go_bot/app/activity_handlers"
+	"github.com/telegram-go-bot/go_bot/app/activity_handlers/covid"
 	qwertyFix "github.com/telegram-go-bot/go_bot/app/activity_handlers/fix_layout"
 	"github.com/telegram-go-bot/go_bot/app/activity_handlers/goroskop"
 	loopapoopa "github.com/telegram-go-bot/go_bot/app/activity_handlers/loopa_poopa"
@@ -58,7 +59,8 @@ var (
 		memberinout.New(tgPresenter),
 		otpetushi.New(tgPresenter),
 		qwertyFix.New(tgPresenter),
-		magicquery.New(tgPresenter, webSearcher)}
+		magicquery.New(tgPresenter, webSearcher),
+		covid.New(tgPresenter)}
 )
 
 func initSettings(url string) error {

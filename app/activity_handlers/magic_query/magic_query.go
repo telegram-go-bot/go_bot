@@ -251,7 +251,7 @@ func (p Impl) OnCommand(item raw.Activity) (bool, error) {
 
 	values, isThisCommand := p.isOnDynamicCommand(item.Text)
 	if !isThisCommand {
-		return true, nil
+		return false, nil
 	}
 
 	pickN := cmn.Rnd.Intn(len(values.values))

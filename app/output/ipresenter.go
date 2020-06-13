@@ -1,8 +1,8 @@
 package output
 
 const (
-	// ParseModeText - treat message as raw string
-	ParseModeText = iota
+	// ParseModeMarkdown - simple ** __ etc. formatting
+	ParseModeMarkdown = iota
 	// ParseModeHTML - treat message as html (inc formatiing etc.)
 	ParseModeHTML
 )
