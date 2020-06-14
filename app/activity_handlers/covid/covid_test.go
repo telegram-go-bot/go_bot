@@ -33,3 +33,15 @@ func TestToString(t *testing.T) {
 		t.Error("unexpected: " + s)
 	}
 }
+
+func TestToStringCorner(t *testing.T) {
+	s := toString(-1)
+	if s != "-1" {
+		t.Error("unexpected: " + s)
+	}
+
+	s = toString(-123345)
+	if s != "-123 345" {
+		t.Error("unexpected: " + s)
+	}
+}

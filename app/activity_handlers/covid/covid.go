@@ -82,6 +82,11 @@ func toString(num int64) string {
 	}
 
 	var buffer bytes.Buffer
+	if s[0] == '-' {
+		s = s[1:]
+		buffer.WriteString("-")
+	}
+
 	counter := len(s) % devider
 
 	for id, ch := range s {
@@ -115,7 +120,7 @@ func formatResponse(item raw.Activity, all covidJSON, ua covidCountry) (output.S
 	buffer.WriteString("\n")
 	buffer.WriteString(countryFromASCII(ua.CountryCode) + "\n")
 	buffer.WriteString("Заразилось: *" + toString(ua.TotalConfirmed) + "* (+" + toString(ua.NewConfirmed) + ")\n")
-	buffer.WriteString("Излечилось: *" + toString(ua.TotalRecovered) + "* (+" + toString(ua.NewRecovered) + ")\n")
+	buffer.WriteString("Активных: *" + toString(ua.TotalConfirmed-ua.TotalRecovered) + "* (+" + toString(ua.NewConfirmed-ua.NewRecovered) + ")\n")
 	buffer.WriteString("Умерло: *" + toString(ua.TotalDeaths) + "* (+" + toString(ua.NewDeaths) + ")\n")
 
 	res.Text = buffer.String()
