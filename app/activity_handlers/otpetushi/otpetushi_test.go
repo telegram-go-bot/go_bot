@@ -44,10 +44,10 @@ func TestWordToKoKo_even(t *testing.T) {
 }
 
 func TestWordToKoKo_odd(t *testing.T) {
-	const src3 string = "sourc"
+	const src3 string = "sourc6789"
 
 	src3_2 := wordToKoKo(src3)
-	if src3_2 != Ko+Koo {
+	if src3_2 != Ko+Ko+Ko+Koo {
 		t.Error("odd src -> even ko's + tail 'o'")
 	}
 }
@@ -63,10 +63,10 @@ func TestWordToKoKo_pi(t *testing.T) {
 
 // dont support numbers inside word. Just replace with koko as usual symbols
 func TestWordToKoKo_number_inside(t *testing.T) {
-	const src3 string = "he11o05"
+	const src3 string = "he11o05ty"
 
 	src3_2 := wordToKoKo(src3)
-	if src3_2 != Ko+Ko+Koo {
+	if src3_2 != Ko+Ko+Ko+Koo {
 		t.Error("word_with_num_inside src -> ordinary koko's output")
 	}
 }
@@ -81,10 +81,28 @@ func TestMessageUnicode(t *testing.T) {
 }
 
 func TestMessage0(t *testing.T) {
+	const src3 string = "!отпетушиши"
+
+	src3_2 := messageToKoKo(src3)
+	if src3_2 != "!"+Ko+Ko+Ko+Ko+Ko {
+		t.Error("any_unicode N chars src -> ~N koko's")
+	}
+}
+
+func TestMessage8symb(t *testing.T) {
 	const src3 string = "!отпетуши"
 
 	src3_2 := messageToKoKo(src3)
-	if src3_2 != "!"+Ko+Ko+Ko+Ko {
+	if src3_2 != "!kud-kudah" {
+		t.Error("any_unicode N chars src -> ~N koko's")
+	}
+}
+
+func TestMessage7symb(t *testing.T) {
+	const src3 string = "!отпетуш"
+
+	src3_2 := messageToKoKo(src3)
+	if src3_2 != "!kukarek" {
 		t.Error("any_unicode N chars src -> ~N koko's")
 	}
 }

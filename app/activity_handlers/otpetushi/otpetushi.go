@@ -130,6 +130,18 @@ func wordToKoKo(word string) string {
 		return "коко"
 	}
 
+	if wordLen == 5 {
+		return "kudah"
+	}
+
+	if wordLen == 7 {
+		return "kukarek"
+	}
+
+	if wordLen == 8 {
+		return "kud-kudah"
+	}
+
 	kokoNum := wordLen / 2
 	additionalOes := wordLen % 2
 
