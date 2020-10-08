@@ -132,7 +132,7 @@ func formatResponse(item raw.Activity, all covidJSON, ua covidCountry) (output.S
 // OnCommand -
 func (p Impl) OnCommand(item raw.Activity) (bool, error) {
 
-	_, isThisCommand := helpers.IsOnCommand(item.Text, []string{"ковид", "covid", "корона", "corona"})
+	_, isThisCommand := helpers.IsOnCommand(item.Text, []string{"ковид", "covid", "корона", "corona", "насморк"})
 	if !isThisCommand {
 		return false, nil
 	}
