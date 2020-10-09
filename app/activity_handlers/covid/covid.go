@@ -52,22 +52,11 @@ type covidData struct {
 	covidCountries list.List
 	Date           *time.Time
 	Global         struct {
-		NewConfirmed int64
-		NewDeaths    int64
-		//NewRecovered   int64
+		NewConfirmed   int64
+		NewDeaths      int64
 		TotalConfirmed int64
 		TotalDeaths    int64
-		//TotalRecovered int64
 	}
-}
-
-func getCountryByCode(allCountries []covidCountry, codeToSearchFor string) int {
-	for id, country := range allCountries {
-		if country.code == codeToSearchFor {
-			return id
-		}
-	}
-	return -1
 }
 
 func countryFromASCII(ascii string) string {
@@ -125,7 +114,7 @@ func formatResponse(item raw.Activity, all covidData, ua covidCountry) (output.S
 	buffer.WriteString("\n")
 	buffer.WriteString(countryFromASCII(ua.code) + "\n")
 	buffer.WriteString("Заразилось: *" + toString(ua.totalCases) + "* (+" + toString(ua.totalNewCasesToday) + ")\n")
-	buffer.WriteString("Активных: *" + toString(ua.totalActiveCases) + "* (+" + toString(ua.totalNewCasesToday) + ")\n")
+	buffer.WriteString("Активных: *" + toString(ua.totalActiveCases+ua.totalSeriousCases) + "* (+" + toString(ua.totalNewCasesToday) + ")\n")
 	buffer.WriteString("Умерло: *" + toString(ua.totalDeaths) + "* (+" + toString(ua.totalNewDeathsToday) + ")\n")
 
 	res.Text = buffer.String()
@@ -134,17 +123,12 @@ func formatResponse(item raw.Activity, all covidData, ua covidCountry) (output.S
 	return res, nil
 }
 
-func (p Impl) addCountry(new covidCountry) {
-	p.addCountryToList(&p.currentCovidData.covidCountries, &p.currentCovidData, new)
-}
-
-func (p Impl) addCountryToList(countries *list.List, currentCovidData *covidData, new covidCountry) {
+func (p Impl) addCountry(countries *list.List, currentCovidData *covidData, new covidCountry, maxCountries int) {
 
 	currentCovidData.Global.NewConfirmed += new.totalNewCasesToday
 	currentCovidData.Global.NewDeaths += new.totalNewDeathsToday
 	currentCovidData.Global.TotalConfirmed += new.totalCases
 	currentCovidData.Global.TotalDeaths += new.totalDeaths
-	//currentCovidData.Global.TotalRecovered += new.totalRecovered
 
 	if countries.Len() == 0 {
 		countries.PushBack(new)
@@ -152,18 +136,18 @@ func (p Impl) addCountryToList(countries *list.List, currentCovidData *covidData
 	}
 
 	for e := countries.Front(); e != nil; e = e.Next() {
-		if new.totalNewCasesToday > e.Value.(covidCountry).totalNewCasesToday {
+		if new.totalNewCasesToday >= e.Value.(covidCountry).totalNewCasesToday {
 			countries.InsertBefore(new, e)
 			break
 		}
 	}
 
-	if countries.Len() > 10 {
+	if countries.Len() > maxCountries {
 		countries.Remove(countries.Back())
 	}
 }
 
-func (p Impl) interfaceToCountry(countryInterface interface{}, ukraine *covidCountry) (covidCountry, error) {
+func (p Impl) interfaceToCountry(countryInterface interface{}) (covidCountry, *covidCountry, error) {
 	var res covidCountry
 	for itemKey, itemValue := range countryInterface.(map[string]interface{}) {
 		switch itemKey {
@@ -190,11 +174,13 @@ func (p Impl) interfaceToCountry(countryInterface interface{}, ukraine *covidCou
 		}
 	}
 
+	var ukraine *covidCountry
+
 	if res.code == "UA" {
 		ukraine = &res
 	}
 
-	return res, nil
+	return res, ukraine, nil
 }
 
 // OnCommand -
@@ -210,7 +196,7 @@ func (p Impl) OnCommand(item raw.Activity) (bool, error) {
 	url := "https://api.thevirustracker.com/free-api?countryTotals=ALL"
 
 	spaceClient := http.Client{
-		Timeout: time.Second * 2, // Maximum of 2 secs
+		Timeout: time.Second * 10, // Maximum of 2 secs
 	}
 
 	req, err := http.NewRequest(http.MethodGet, url, nil)
@@ -257,9 +243,12 @@ func (p Impl) OnCommand(item raw.Activity) (bool, error) {
 					case string:
 						log.Printf("%+v", contriesIbj)
 					case interface{}:
-						country, err := p.interfaceToCountry(contriesIbj, &p.ukraine)
+						country, ukr, err := p.interfaceToCountry(contriesIbj)
 						if err == nil {
-							p.addCountry(country)
+							if ukr != nil {
+								p.ukraine = *ukr
+							}
+							p.addCountry(&p.currentCovidData.covidCountries, &p.currentCovidData, country, 5)
 						}
 					}
 
