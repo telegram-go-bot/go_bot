@@ -275,7 +275,7 @@ func (p Impl) OnCommand(item raw.Activity) (bool, error) {
 		ImageURL: resultURL,
 		ShowMessageData: output.ShowMessageData{
 			ChatID:       item.ChatID,
-			ReplyToMsgID: item.MesssageID}})
+			ReplyToMsgID: cmn.GetReplyToMessageID(item)}})
 
 	return true, nil
 }
