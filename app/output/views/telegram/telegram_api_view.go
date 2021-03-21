@@ -109,3 +109,31 @@ func (t *APIView) ShowAnimation(animation output.ViewAnimationData) (int, error)
 
 	return sent.MessageID, nil
 }
+
+// ShowAudio - display audio message using telegram bot api
+func (t *APIView) ShowAudio(msg output.ViewAudioData) (int, error) {
+
+	if len(msg.AudioData) == 0 {
+		return 0,
+			errors.New("<TgApiView::ShowAudio> audio-file buffer is empty")
+	}
+
+	fileBytes := tgbotapi.FileBytes{Name: "", Bytes: msg.AudioData}
+	audioMsg := tgbotapi.NewAudioUpload(msg.ChatID, fileBytes)
+
+	if msg.ReplyToMsgID != 0 {
+		audioMsg.ReplyToMessageID = msg.ReplyToMsgID
+	}
+
+	audioMsg.Title = msg.Text
+	if len(audioMsg.Title) == 0 {
+		audioMsg.Title = "."
+	}
+
+	sent, err := bot.Send(audioMsg)
+	if err != nil {
+		return 0, err
+	}
+
+	return sent.MessageID, nil
+}

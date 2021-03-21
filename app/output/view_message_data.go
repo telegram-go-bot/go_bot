@@ -20,3 +20,10 @@ type ViewAnimationData struct {
 	Caption     string
 	ViewMessageData
 }
+
+// ViewAudioData - uploads audio and shows it
+type ViewAudioData struct {
+	AudioData []byte
+	Caption   string
+	ViewMessageData
+}

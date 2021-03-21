@@ -29,6 +29,14 @@ type ShowAnimationData struct {
 	ShowMessageData
 }
 
+// ShowAudioData - feed presenter's ShowAudio with this
+type ShowAudioData struct {
+	AudioURL     string
+	RawAudioData []byte
+	Caption      string
+	ShowMessageData
+}
+
 //go:generate mockgen -destination=../mocks/mock_ipresenter.go -package=mocks github.com/telegram-go-bot/go_bot/app/output IPresenter
 
 // IPresenter - prepares data to display it via View
@@ -37,4 +45,5 @@ type IPresenter interface {
 	ShowMessage(data ShowMessageData) (int, error)
 	ShowImage(data ShowImageData) (int, error)
 	ShowGif(data ShowAnimationData) (int, error)
+	ShowAudio(data ShowAudioData) (int, error)
 }

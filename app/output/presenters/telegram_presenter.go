@@ -78,3 +78,32 @@ func (s ActivityPresenter) ShowGif(animationData output.ShowAnimationData) (int,
 
 	return msgID, nil
 }
+
+// ShowAudio - Download audio from URL and show it
+func (s ActivityPresenter) ShowAudio(data output.ShowAudioData) (int, error) {
+
+	var msg output.ViewAudioData
+
+	if data.RawAudioData != nil {
+		msg.AudioData = data.RawAudioData
+	} else {
+		var err error
+		msg.AudioData, err = cmn.DownloadFileByURL(data.AudioURL)
+		if err != nil {
+			return 0, err
+		}
+	}
+
+	msg.Caption = data.Caption
+	msg.Text = data.Text
+	msg.ChatID = data.ChatID
+	msg.ReplyToMsgID = data.ReplyToMsgID
+	msg.ParseMode = data.ParseMode
+
+	msgID, err := s.view.ShowAudio(msg)
+	if err != nil {
+		return 0, err
+	}
+
+	return msgID, nil
+}

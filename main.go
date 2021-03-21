@@ -13,6 +13,7 @@ import (
 	"github.com/telegram-go-bot/go_bot/app/activity_handlers/covid"
 	qwertyFix "github.com/telegram-go-bot/go_bot/app/activity_handlers/fix_layout"
 	"github.com/telegram-go-bot/go_bot/app/activity_handlers/goroskop"
+	ivona "github.com/telegram-go-bot/go_bot/app/activity_handlers/ivona_maxim_text_to_speech"
 	loopapoopa "github.com/telegram-go-bot/go_bot/app/activity_handlers/loopa_poopa"
 	magicquery "github.com/telegram-go-bot/go_bot/app/activity_handlers/magic_query"
 	memberinout "github.com/telegram-go-bot/go_bot/app/activity_handlers/member_in_out"
@@ -60,7 +61,9 @@ var (
 		otpetushi.New(tgPresenter),
 		qwertyFix.New(tgPresenter),
 		magicquery.New(tgPresenter, webSearcher),
-		covid.New(tgPresenter)}
+		covid.New(tgPresenter),
+		ivona.New(tgPresenter),
+	}
 )
 
 func initSettings(url string) error {
