@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"regexp"
+	"strconv"
 	"sync"
 	"time"
 
@@ -105,7 +106,13 @@ func getUrl(msg string) (string, bool) {
 
 func waitForResponse(convID string) (string, error) {
 	parameters := make(map[string]string)
-	parameters["user_id"] = "2314852"
+
+	userID := os.Getenv("IVONA_TEXT_TO_SPEECH_USER_ID")
+	if len(convID) == 0 {
+		return "", fmt.Errorf("IVONA_TEXT_TO_SPEECH_USER_ID env var is EMPTY!!!")
+	}
+
+	parameters["user_id"] = userID
 	parameters["count"] = "1"
 	parameters["peer_id"] = convID
 
@@ -142,7 +149,7 @@ func textToSpeech(msg string) (string, error) {
 	if len(convID) == 0 {
 		return "", fmt.Errorf("IVONA_TEXT_TO_SPEECH_CONVERSATION_ID env var is EMPTY!!!")
 	}
-	/*parameters := make(map[string]string)
+	parameters := make(map[string]string)
 	parameters["message"] = msg
 	parameters["peer_id"] = convID
 	parameters["random_id"] = strconv.Itoa(cmn.Rnd.Intn(1000000))
@@ -152,7 +159,7 @@ func textToSpeech(msg string) (string, error) {
 		return "", fmt.Errorf("messages.send request failed: %s", err)
 	}
 
-	fmt.Println(string(resp))*/
+	fmt.Println(string(resp))
 
 	for {
 		time.Sleep(1 * time.Second)
