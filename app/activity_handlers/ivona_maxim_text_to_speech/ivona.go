@@ -21,14 +21,25 @@ import (
 var mp3UrlRe = regexp.MustCompile(`\(mp3\): (.*?)\n`)
 
 type impl struct {
-	presenter output.IPresenter
-	lock      *sync.Mutex
+	presenter           output.IPresenter
+	lock                *sync.Mutex
+	spamProtectionDelay time.Duration
+	nextAvailableTime   *time.Time
 }
 
 // New - constructor
 func New(presenter output.IPresenter) impl {
-	var tmp = impl{presenter: presenter, lock: &sync.Mutex{}}
+	var tmp = impl{
+		presenter:           presenter,
+		lock:                &sync.Mutex{},
+		spamProtectionDelay: 15 * time.Second}
+	currentTime := time.Now()
+	tmp.nextAvailableTime = &currentTime
 	return tmp
+}
+
+func (p impl) updateSpamProtectionTime() {
+	*p.nextAvailableTime = time.Now().Add(p.spamProtectionDelay)
 }
 
 // OnHelp - display help
@@ -44,6 +55,16 @@ func (p impl) OnCommand(item domain.Activity) (bool, error) {
 		return false, nil
 	}
 
+	SendMsg := func(message string) (int, error) {
+		return p.presenter.ShowMessage(output.ShowMessageData{ChatID: item.ChatID, Text: message})
+	}
+
+	if !time.Now().After(*p.nextAvailableTime) {
+		SendMsg("Spam protection..")
+		return true, nil
+	}
+	p.updateSpamProtectionTime()
+
 	var text string
 	if len(msg) != 0 {
 		text = msg
@@ -53,10 +74,6 @@ func (p impl) OnCommand(item domain.Activity) (bool, error) {
 
 	if len(text) == 0 {
 		return false, nil
-	}
-
-	SendMsg := func(message string) (int, error) {
-		return p.presenter.ShowMessage(output.ShowMessageData{ChatID: item.ChatID, Text: message})
 	}
 
 	p.lock.Lock()
@@ -136,7 +153,8 @@ func waitForResponse(convID string) (string, error) {
 
 	url, parsed := getUrl(vkResponse.Response.Items[0].Text)
 	if !parsed {
-		return "", fmt.Errorf("Error extracting url from: %s", vkResponse.Response.Items[0].Text)
+		fmt.Printf("Error extracting url from: %s\n", vkResponse.Response.Items[0].Text)
+		return "", nil
 	}
 
 	return url, nil
