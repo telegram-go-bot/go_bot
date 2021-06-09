@@ -83,6 +83,6 @@ func (p *Settings) AddRecord(newRec interface{}) error {
 // UpdateRecord - update existing
 func (p *Settings) UpdateRecord(newRec interface{}) error {
 	// todo: update only defined fields...
-	err := p.db.Save(newRec).Error
+	err := p.db.Update(newRec).Error
 	return err
 }

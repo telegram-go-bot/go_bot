@@ -1,6 +1,11 @@
 package magicquery
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/telegram-go-bot/go_bot/app/mocks"
+)
 
 func TestParseAddBase(t *testing.T) {
 	parsed, err := parseAdd("Magic" + queryDelimiter + "Val" + queryDelimiter + "Type")
@@ -25,4 +30,12 @@ func TestParseAddFriendly(t *testing.T) {
 		parsed.val != "val" {
 		t.Error("expected default type")
 	}
+}
+
+func TestAddRecordComplete(t *testing.T) {
+	mockCtrl := gomock.NewController(t)
+	defer mockCtrl.Finish()
+
+	mockPresenter := mocks.NewMockIPresenter(mockCtrl)
+	commandHandler := New(mockPresenter)
 }

@@ -18,7 +18,7 @@ import (
 const (
 	valueTypeQuery   = "q"
 	valueTypeURL     = "u"
-	defaultValueType = valueTypeQuery
+	defaultValueType = valueTypeURL
 	queryDelimiter   = ";;"
 )
 

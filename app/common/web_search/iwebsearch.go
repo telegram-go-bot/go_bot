@@ -1,5 +1,7 @@
 package websearch
 
+//go:generate mockgen -destination=../mocks/mock_iwebsearcher.go -package=mocks github.com/telegram-go-bot/go_bot/app/common/websearch Searcher
+
 // Searcher - search for image url, or some text
 type Searcher interface {
 	MaxResponseItemsCount() int

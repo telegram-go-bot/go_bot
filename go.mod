@@ -1,6 +1,7 @@
 module github.com/telegram-go-bot/go_bot
 
-go 1.13
+// +heroku goVersion go1.16
+go 1.16
 
 require (
 	github.com/PuerkitoBio/goquery v1.6.1 // indirect
