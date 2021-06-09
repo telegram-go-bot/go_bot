@@ -107,5 +107,7 @@ func (p impl) onGooglePhotoImpl(item raw.Activity, strToFind string, depth int) 
 		continue
 	}
 
+	SendMsg("Missing Data...")
+
 	return true, errors.New("No more URLS left for a text : \"" + strToFind + "\"")
 }

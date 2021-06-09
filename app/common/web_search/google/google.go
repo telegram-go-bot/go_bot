@@ -59,9 +59,11 @@ func (s Search) SearchImage(query string, searchDepth int) []string {
 		log.Fatal(err)
 	}
 
-	resp, err := svc.Cse.List(query).
+	resp, err := svc.Cse.List().
+		Q(query).
 		Cx(s.cx).
 		SearchType("image").
+		ImgSize("medium").
 		Do()
 
 	if err != nil {
