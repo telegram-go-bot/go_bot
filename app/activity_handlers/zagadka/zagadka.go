@@ -12,6 +12,9 @@ import (
 	output "github.com/telegram-go-bot/go_bot/app/output"
 )
 
+// todo: https://www.anekdotovmir.ru/shutki/zagadki-shutochnye/
+// 		 https://www.anekdotovmir.ru/shutki/zagadki-shutochnye/shutki-zadachi/
+
 type zagadka struct {
 	presenter output.IPresenter
 	scrapper  webscrapper.Interface
@@ -69,7 +72,7 @@ func (p zagadka) onZagadka(item raw.Activity) {
 		return
 	}
 
-	itemID := cmn.Rnd.Intn(len(items) + 1)
+	itemID := cmn.Rnd.Intn(len(items))
 
 	sentID, err := SendMsg(items[itemID].zagadka)
 	if err != nil {

@@ -2,9 +2,6 @@ package magicquery
 
 import (
 	"testing"
-
-	"github.com/golang/mock/gomock"
-	"github.com/telegram-go-bot/go_bot/app/mocks"
 )
 
 func TestParseAddBase(t *testing.T) {
@@ -32,10 +29,11 @@ func TestParseAddFriendly(t *testing.T) {
 	}
 }
 
-func TestAddRecordComplete(t *testing.T) {
+/*func TestAddRecordComplete(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
 	mockPresenter := mocks.NewMockIPresenter(mockCtrl)
-	commandHandler := New(mockPresenter)
-}
+	mockSearcher := mocks.NewMockSearcher(mockCtrl)
+	commandHandler := New(mockPresenter, mockSearcher)
+}*/
