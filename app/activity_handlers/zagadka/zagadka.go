@@ -14,6 +14,8 @@ import (
 
 // todo: https://www.anekdotovmir.ru/shutki/zagadki-shutochnye/
 // 		 https://www.anekdotovmir.ru/shutki/zagadki-shutochnye/shutki-zadachi/
+//       https://crossword.nalench.com/others/37330-poshlye-zagadki.html
+//		 https://crossword.nalench.com/others/37525-smeshnye-zagadki-dlja-vzroslyh.html
 
 type zagadka struct {
 	presenter output.IPresenter
@@ -29,6 +31,13 @@ func New(presenter output.IPresenter, scrapper webscrapper.Interface) zagadka {
 func (p zagadka) OnHelp() string {
 	return "<b>!загадка</b> затем <b>!отгадка|ответ|разгадка</b> - загадки для выпускников Гарварда"
 }
+
+type lastUsed struct {
+	page    int
+	itemNum int
+}
+
+var questsLastUsedInfo = map[int64] /*chatID*/ lastUsed{}
 
 // OnCommand -
 func (p zagadka) OnCommand(item raw.Activity) (bool, error) {
@@ -57,6 +66,28 @@ func (p zagadka) onZagadka(item raw.Activity) {
 		return p.presenter.ShowMessage(output.ShowMessageData{ChatID: item.ChatID, Text: message})
 	}
 
+	questLastUsedInfo, found := questsLastUsedInfo[item.ChatID]
+	if !found {
+		questLastUsedInfo = lastUsed{page: 1, itemNum: 19}
+		questsLastUsedInfo[item.ChatID] = questLastUsedInfo
+	}
+
+	pageNo := questLastUsedInfo.page
+	itemNo := questLastUsedInfo.itemNum
+	itemNo++
+	if pageNo*20 < itemNo || itemNo > 130 {
+		// inc page
+		if pageNo == 7 {
+			pageNo = 1
+			itemNo = 1
+		} else {
+			pageNo++
+			itemNo = (pageNo-1)*20 + 1
+		}
+	}
+
+	localItemNoOnPage := itemNo - (pageNo-1)*20
+
 	items := make([]questItem, 0, 20)
 
 	scrapper := p.scrapper.Init()
@@ -65,14 +96,14 @@ func (p zagadka) onZagadka(item raw.Activity) {
 		addNewQuest(text, &items)
 	})
 
-	scrapper.Visit("http://allriddles.ru/ru/riddles/joke/p" + strconv.Itoa(cmn.Rnd.Intn(7)+1) + "/")
+	scrapper.Visit("http://allriddles.ru/ru/riddles/joke/p" + strconv.Itoa(pageNo) + "/")
 
 	if len(items) == 0 {
 		SendMsg(cmn.GetFailMsg())
 		return
 	}
 
-	itemID := cmn.Rnd.Intn(len(items))
+	itemID := localItemNoOnPage - 1
 
 	sentID, err := SendMsg(items[itemID].zagadka)
 	if err != nil {
@@ -83,6 +114,8 @@ func (p zagadka) onZagadka(item raw.Activity) {
 	quest := items[itemID]
 	quest.msgID = sentID
 	activeItems[item.ChatID] = quest
+
+	questsLastUsedInfo[item.ChatID] = lastUsed{page: pageNo, itemNum: itemNo}
 }
 
 func (p zagadka) onOtgadka(item raw.Activity) {
