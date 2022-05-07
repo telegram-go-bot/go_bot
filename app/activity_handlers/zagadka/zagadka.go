@@ -1,6 +1,7 @@
 package zagadka
 
 import (
+	"log"
 	"regexp"
 	"strconv"
 	"strings"
@@ -74,6 +75,9 @@ func (p zagadka) onZagadka(item raw.Activity) {
 
 	pageNo := questLastUsedInfo.page
 	itemNo := questLastUsedInfo.itemNum
+
+	log.Printf("Zagadka. page: %d, item: %d", pageNo, itemNo)
+
 	itemNo++
 	if pageNo*20 < itemNo || itemNo > 130 {
 		// inc page
